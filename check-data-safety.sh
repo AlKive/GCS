@@ -74,7 +74,7 @@ echo ""
 # Check 6: Database Protection Guide
 echo -e "${BLUE}6. Checking documentation...${NC}"
 if [ -f "DATABASE_PROTECTION.md" ]; then
-    echo -e "${GREEN}✓ Present: DATABASE_PROTECTION.md exists${NC}"
+    echo -e "${GREEN}✓ Present: DATABASE_PROTEATION.md exists${NC}"
 else
     echo -e "${YELLOW}⚠ Missing: DATABASE_PROTECTION.md not found${NC}"
 fi
