@@ -74,13 +74,6 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isDarkMode, onToggleDarkM
     const [hudColor, setHudColor] = useState('Orange');
     const [autoSync, setAutoSync] = useState(true);
 
-    const handleClearHistory = () => {
-        if (window.confirm('Are you sure you want to permanently delete all mission history? This action cannot be undone.')) {
-            // Placeholder for actual deletion logic
-            alert('Mission history cleared.');
-        }
-    };
-
     return (
         <div className="space-y-4 animate-fade-in h-full overflow-y-auto">
             <SettingSection title="General Settings" description="Customize the overall look and feel of the application.">
@@ -143,18 +136,6 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isDarkMode, onToggleDarkM
                     enabled={autoSync}
                     onToggle={() => setAutoSync(!autoSync)}
                 />
-                 <div className="flex items-center justify-between border-t pt-3 first:border-t-0 first:pt-0 dark:border-gray-700">
-                    <div>
-                        <p className="font-semibold text-sm text-red-600">Clear Mission History</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">Permanently delete all saved flight logs from the application.</p>
-                    </div>
-                    <button 
-                        onClick={handleClearHistory}
-                        className="bg-red-600 hover:bg-red-700 text-white font-bold text-sm py-1.5 px-4 rounded-lg transition-colors duration-200"
-                    >
-                        Delete
-                    </button>
-                </div>
             </SettingSection>
             
             <div className="flex justify-end gap-3 pb-4">
