@@ -66,4 +66,12 @@ const MissionTrackMap: React.FC<MissionTrackMapProps> = ({ track, planWaypoints,
   );
 };
 
-export default MissionTrackMap;
+function areEqual(prevProps: MissionTrackMapProps, nextProps: MissionTrackMapProps) {
+  return (
+    prevProps.mapStyle === nextProps.mapStyle &&
+    JSON.stringify(prevProps.track) === JSON.stringify(nextProps.track) &&
+    JSON.stringify(prevProps.planWaypoints) === JSON.stringify(nextProps.planWaypoints)
+  );
+}
+
+export default React.memo(MissionTrackMap, areEqual);
