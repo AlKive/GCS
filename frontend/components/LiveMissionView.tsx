@@ -297,8 +297,13 @@ const LiveMissionView: React.FC<LiveMissionViewProps> = ({ telemetry, onEndMissi
           </div>
 
           {/* Mini-Map */}
-          <div className="absolute top-4 right-4 w-48 h-40 bg-gray-800/80 rounded-lg border border-gray-600 overflow-hidden">
-            <MissionTrackMap track={telemetry.gpsTrack} mapStyle={mapStyle} />
+          <div className="absolute top-4 right-4 w-48 h-40 bg-gray-800/80 rounded-lg border border-gray-600 p-2 flex flex-col">
+            <span className="text-xs text-gray-400">Mini Map View</span>
+            <div className="flex-1 flex items-center justify-center">
+              <span className="text-gray-500 text-sm">(Mini-Map)</span>
+            </div>
+            <p className="font-mono text-xs">{telemetry.gps.lat.toFixed(4)}</p>
+            <p className="font-mono text-xs">{telemetry.gps.lon.toFixed(4)}</p>
           </div>
         </div>
 
