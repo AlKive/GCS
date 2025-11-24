@@ -31,9 +31,10 @@ const SearchIcon = () => (
 
 interface FlightLogsPanelProps {
   missions: Mission[];
+  mapStyle: string;
 }
 
-const FlightLogsPanel: React.FC<FlightLogsPanelProps> = ({ missions }) => {
+const FlightLogsPanel: React.FC<FlightLogsPanelProps> = ({ missions, mapStyle }) => {
   const [selectedMission, setSelectedMission] = useState<Mission | null>(missions[0] || null);
   
   const [searchQuery, setSearchQuery] = useState('');
@@ -215,7 +216,7 @@ const FlightLogsPanel: React.FC<FlightLogsPanelProps> = ({ missions }) => {
               </p>
               
               <div className="w-full h-2/5 rounded-lg overflow-hidden bg-gray-700">
-                <MissionTrackMap track={displayTrack} />
+                <MissionTrackMap track={displayTrack} mapStyle={mapStyle} />
               </div>
 
               <h3 className="text-base font-bold mt-4 mb-2 dark:text-white">Detected Objects</h3>

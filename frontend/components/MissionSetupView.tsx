@@ -6,7 +6,8 @@ import type { MissionPlan } from 'types';
 import iconUrl from 'leaflet/dist/images/marker-icon.png?url';
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png?url';
 
-import LoadPlanModal from './LoadPlanModal'; 
+import LoadPlanModal from './LoadPlanModal';
+import { mapStyleProviders } from '../utils/mapStyles'; 
 
 const DefaultIcon = new Icon({
     iconUrl: iconUrl,
@@ -41,9 +42,11 @@ const WaypointMap = ({ waypoints, onAddWaypoint }: {
 interface MissionSetupViewProps {
   onLaunch: (plan: MissionPlan) => void;
   onClose: () => void;
+  mapStyle: string;
 }
 
-const MissionSetupView: React.FC<MissionSetupViewProps> = ({ onLaunch, onClose }) => {
+const MissionSetupView: React.FC<MissionSetupViewProps> = ({ onLaunch, onClose, mapStyle }) => {
+  const { url, attribution } = mapStyleProviders[mapStyle] || mapStyleProviders['Default'];
   const [missionName, setMissionName] = useState('New Mission Plan');
   const [altitude, setAltitude] = useState(50);
   const [speed, setSpeed] = useState(10);
@@ -224,8 +227,8 @@ const MissionSetupView: React.FC<MissionSetupViewProps> = ({ onLaunch, onClose }
                   className="w-full h-full"
                 >
                   <TileLayer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url={url}
+                    attribution={attribution}
                   />
                   <WaypointMap waypoints={waypoints} onAddWaypoint={handleAddWaypoint} />
                 </MapContainer>

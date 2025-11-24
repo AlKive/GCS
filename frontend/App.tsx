@@ -114,7 +114,7 @@ const App: React.FC = () => {
       case 'analytics':
         return <AnalyticsPanel missions={missions} />;
       case 'flightLogs':
-        return <FlightLogsPanel missions={missions} />;
+        return <FlightLogsPanel missions={missions} mapStyle={mapStyle} />;
       case 'settings':
         return <SettingsPanel 
           isDarkMode={isDarkMode} 
@@ -151,7 +151,7 @@ const App: React.FC = () => {
         </div>
       </main>
       
-      {isSetupViewVisible && <MissionSetupView onLaunch={handleLaunchMission} onClose={() => setSetupViewVisible(false)} />}
+      {isSetupViewVisible && <MissionSetupView onLaunch={handleLaunchMission} onClose={() => setSetupViewVisible(false)} mapStyle={mapStyle} />}
       {isMissionActive && <LiveMissionView telemetry={liveTelemetry} onEndMission={endMission} mapStyle={mapStyle} />}
     </div>
   );
