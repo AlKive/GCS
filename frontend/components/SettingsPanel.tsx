@@ -74,6 +74,24 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isDarkMode, onToggleDarkM
     const [units, setUnits] = useState('Metric');
     const [hudColor, setHudColor] = useState('Orange');
     const [autoSync, setAutoSync] = useState(true);
+    const [showSaveMessage, setShowSaveMessage] = useState(false);
+
+    // Effect to hide the message after a few seconds
+    React.useEffect(() => {
+        if (showSaveMessage) {
+            const timer = setTimeout(() => {
+                setShowSaveMessage(false);
+            }, 3000); // Hide after 3 seconds
+            return () => clearTimeout(timer);
+        }
+    }, [showSaveMessage]);
+
+    const handleSaveSettings = () => {
+        // In a real application, you'd save these settings to a backend or more robust storage.
+        // For now, they are already being saved/applied immediately (dark mode, map style).
+        // This button will just provide visual feedback.
+        setShowSaveMessage(true);
+    };
 
     return (
         <div className="space-y-4 animate-fade-in h-full overflow-y-auto">
@@ -143,10 +161,18 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isDarkMode, onToggleDarkM
                  <button className="text-gray-600 font-bold text-sm py-2 px-6 rounded-lg transition-all duration-200 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white">
                     Reset to Defaults
                 </button>
-                 <button className="text-white font-bold text-sm py-2 px-6 rounded-lg transition-all duration-200 bg-gcs-orange hover:opacity-90 shadow-lg shadow-gcs-orange/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gcs-orange">
+                 <button className="text-white font-bold text-sm py-2 px-6 rounded-lg transition-all duration-200 bg-gcs-orange hover:opacity-90 shadow-lg shadow-gcs-orange/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gcs-orange"
+                    onClick={handleSaveSettings}
+                >
                     Save Settings
                 </button>
             </div>
+
+            {showSaveMessage && (
+                <div className="absolute bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg animate-fade-in-fast">
+                    Settings saved successfully!
+                </div>
+            )}
         </div>
     );
 };
