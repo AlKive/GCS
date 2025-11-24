@@ -18,7 +18,7 @@ const DefaultIcon = new Icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 // --- Map Component ---
-const WaypointMap = ({ waypoints, onAddWaypoint }: { 
+const WaypointMap = React.memo(({ waypoints, onAddWaypoint }: { 
     waypoints: LatLng[], 
     onAddWaypoint: (latlng: LatLng) => void 
 }) => {
@@ -35,7 +35,7 @@ const WaypointMap = ({ waypoints, onAddWaypoint }: {
       ))}
     </>
   );
-};
+});
 
 
 // --- Main View Component ---
@@ -88,11 +88,11 @@ const MissionSetupView: React.FC<MissionSetupViewProps> = ({ onLaunch, onClose, 
     setChecklist(prev => ({ ...prev, [item]: !prev[item] }));
   };
   
-  const handleAddWaypoint = (latlng: LatLng) => {
+  const handleAddWaypoint = React.useCallback((latlng: LatLng) => {
     setUndoStack(prev => [...prev, waypoints]);
     setRedoStack([]);
     setWaypoints(prev => [...prev, latlng]);
-  };
+  }, [waypoints]);
 
   const handleUndo = () => {
     if (undoStack.length > 0) {

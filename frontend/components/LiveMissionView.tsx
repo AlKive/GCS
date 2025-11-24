@@ -279,7 +279,8 @@ const LiveMissionView: React.FC<LiveMissionViewProps> = ({ telemetry, onEndMissi
 
         {/* Left Column: Map/Camera (2/3 width) */}
         <div className="col-span-2 bg-black rounded-lg shadow-inner overflow-hidden relative flex items-center justify-center">
-          <MissionTrackMap track={telemetry.gpsTrack} mapStyle={mapStyle} />
+          
+          <p className="text-gray-500 text-lg">(Map / Camera Feed Placeholder)</p>
           
           {/* OSD (On-Screen Display) Elements */}
           <div className="absolute top-4 left-4 p-2 bg-black/30 rounded">
@@ -296,13 +297,8 @@ const LiveMissionView: React.FC<LiveMissionViewProps> = ({ telemetry, onEndMissi
           </div>
 
           {/* Mini-Map */}
-          <div className="absolute top-4 right-4 w-48 h-40 bg-gray-800/80 rounded-lg border border-gray-600 p-2 flex flex-col">
-            <span className="text-xs text-gray-400">Satellite map view</span>
-            <div className="flex-1 flex items-center justify-center">
-              <span className="text-gray-500 text-sm">(Mini-Map)</span>
-            </div>
-            <p className="font-mono text-xs">{telemetry.gps.lat.toFixed(4)}</p>
-            <p className="font-mono text-xs">{telemetry.gps.lon.toFixed(4)}</p>
+          <div className="absolute top-4 right-4 w-48 h-40 bg-gray-800/80 rounded-lg border border-gray-600 overflow-hidden">
+            <MissionTrackMap track={telemetry.gpsTrack} mapStyle={mapStyle} />
           </div>
         </div>
 
