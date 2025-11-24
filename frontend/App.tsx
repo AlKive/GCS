@@ -24,7 +24,13 @@ const App: React.FC = () => {
   const [missionPlan, setMissionPlan] = useState<MissionPlan | null>(null);
   const [isSetupViewVisible, setSetupViewVisible] = useState(false);
   const [isDarkMode, setDarkMode] = useState(false);
-  const [mapStyle, setMapStyle] = useState('Satellite'); // New state for map style
+  const [mapStyle, setMapStyle] = useState(() => {
+    return localStorage.getItem('mapStyle') || 'Satellite';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('mapStyle', mapStyle);
+  }, [mapStyle]);
 
   // 1. Start with an empty array
   const [missions, setMissions] = useState<Mission[]>([]); 
