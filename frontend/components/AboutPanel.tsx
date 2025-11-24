@@ -143,15 +143,15 @@ const AboutPanel: React.FC = () => {
                     <div className="space-y-1.5 text-xs">
                         <div>
                             <p className="font-semibold text-gcs-primary">Frontend:</p>
-                            <p className="text-gray-700 dark:text-gray-300">React, TypeScript, Tailwind CSS</p>
+                            <p className="text-gray-700 dark:text-gray-300">React, TypeScript, Tailwind CSS, Leaflet</p>
                         </div>
                         <div>
                             <p className="font-semibold text-gcs-primary">AI Model:</p>
-                            <p className="text-gray-700 dark:text-gray-300">YOLOv8 for Object Detection</p>
+                            <p className="text-gray-700 dark:text-gray-300">YOLOv8</p>
                         </div>
                         <div>
                             <p className="font-semibold text-gcs-primary">Backend:</p>
-                            <p className="text-gray-700 dark:text-gray-300">Python, OpenCV</p>
+                            <p className="text-gray-700 dark:text-gray-300">Node.js, Fastify, PostgreSQL, SerialPort</p>
                         </div>
                         <div>
                             <p className="font-semibold text-gcs-primary">Build Tool:</p>
