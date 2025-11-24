@@ -13,7 +13,11 @@
           colors: {
             'gcs-dark': '#111827',
             'gcs-background': '#F9F4F1',
-            'gcs-orange': '#F97316',
+            'gcs-primary': 'var(--gcs-primary)',
+            'gcs-primary-light': 'var(--gcs-primary-light)',
+            'gcs-primary-dark': 'var(--gcs-primary-dark)',
+            'gcs-text-on-primary': 'var(--gcs-text-on-primary)',
+            'gcs-orange': 'var(--gcs-primary)', // Keep gcs-orange for compatibility
             'gcs-text-dark': '#1F2937',
             'gcs-text-light': '#D1D5DB',
             'gcs-card': '#FFFFFF',
@@ -41,6 +45,42 @@
     <style>
       .leaflet-control-attribution {
         font-size: 0.6rem !important; /* Smaller font size for attribution */
+      }
+      :root {
+        --gcs-primary: #F97316;
+        --gcs-primary-light: #FB923C;
+        --gcs-primary-dark: #EA580C;
+        --gcs-text-on-primary: #FFFFFF;
+      }
+      .theme-purple {
+        --gcs-primary: #8B5CF6;
+        --gcs-primary-light: #A78BFA;
+        --gcs-primary-dark: #7C3AED;
+        --gcs-text-on-primary: #FFFFFF;
+      }
+      .theme-orange {
+        --gcs-primary: #F97316;
+        --gcs-primary-light: #FB923C;
+        --gcs-primary-dark: #EA580C;
+        --gcs-text-on-primary: #FFFFFF;
+      }
+      .theme-blue {
+        --gcs-primary: #3B82F6;
+        --gcs-primary-light: #60A5FA;
+        --gcs-primary-dark: #2563EB;
+        --gcs-text-on-primary: #FFFFFF;
+      }
+      .theme-green {
+        --gcs-primary: #10B981;
+        --gcs-primary-light: #34D399;
+        --gcs-primary-dark: #059669;
+        --gcs-text-on-primary: #FFFFFF;
+      }
+      .theme-black {
+        --gcs-primary: #1F2937;
+        --gcs-primary-light: #374151;
+        --gcs-primary-dark: #111827;
+        --gcs-text-on-primary: #FFFFFF;
       }
     </style>
   <script type="importmap">

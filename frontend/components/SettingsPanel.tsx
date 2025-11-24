@@ -33,7 +33,7 @@ const ToggleSetting: React.FC<ToggleSettingProps> = ({ label, description, enabl
         </div>
         <button 
             onClick={onToggle}
-            className={`relative inline-flex items-center h-5 rounded-full w-10 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gcs-orange ${enabled ? 'bg-gcs-orange' : 'bg-gray-300'}`}
+            className={`relative inline-flex items-center h-5 rounded-full w-10 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 gcs-primary ${enabled ? 'bg-gcs-orange' : 'bg-gray-300'}`}
         >
             <span className={`inline-block w-3.5 h-3.5 transform bg-white rounded-full transition-transform duration-300 ${enabled ? 'translate-x-5' : 'translate-x-1'}`} />
         </button>
@@ -54,7 +54,7 @@ const SelectSetting: React.FC<SelectSettingProps> = ({ label, description, optio
             <p className="font-semibold text-sm text-gcs-text-dark dark:text-gray-200">{label}</p>
             <p className="text-xs text-gray-500 dark:text-gray-400">{description}</p>
         </div>
-        <select value={value} onChange={e => onChange(e.target.value)} className="w-44 bg-white border border-gray-300 rounded-lg py-1.5 px-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-gcs-orange dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        <select value={value} onChange={e => onChange(e.target.value)} className="w-44 bg-white border border-gray-300 rounded-lg py-1.5 px-2.5 text-xs focus:outline-none focus:ring-2 gcs-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white">
             {options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
         </select>
     </div>
@@ -67,9 +67,11 @@ interface SettingsPanelProps {
     onToggleDarkMode: () => void;
     mapStyle: string;
     setMapStyle: (style: string) => void;
+    theme: string;
+    setTheme: (theme: string) => void;
 }
 
-const SettingsPanel: React.FC<SettingsPanelProps> = ({ isDarkMode, onToggleDarkMode, mapStyle, setMapStyle }) => {
+const SettingsPanel: React.FC<SettingsPanelProps> = ({ isDarkMode, onToggleDarkMode, mapStyle, setMapStyle, theme, setTheme }) => {
     // Dummy state for other settings
     const [units, setUnits] = useState('Metric');
     const [hudColor, setHudColor] = useState('Orange');
@@ -109,6 +111,13 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isDarkMode, onToggleDarkM
                     value={units}
                     onChange={setUnits}
                 />
+                <SelectSetting
+                    label="GUI Color Theme"
+                    description="Select the color theme for the application."
+                    options={['purple', 'orange', 'blue', 'green', 'black']}
+                    value={theme}
+                    onChange={setTheme}
+                />
             </SettingSection>
 
             <SettingSection title="Map & Flight Log Settings" description="Adjust preferences for the flight map and mission log views.">
@@ -142,7 +151,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isDarkMode, onToggleDarkM
                         <p className="text-xs text-gray-500 dark:text-gray-400">Set the threshold for low battery alerts (10-50%).</p>
                     </div>
                     <div className="flex items-center gap-2">
-                         <input type="number" defaultValue="20" min="10" max="50" className="w-16 text-center bg-white border border-gray-300 rounded-lg py-1.5 px-2 text-xs focus:outline-none focus:ring-2 focus:ring-gcs-orange dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+                         <input type="number" defaultValue="20" min="10" max="50" className="w-16 text-center bg-white border border-gray-300 rounded-lg py-1.5 px-2 text-xs focus:outline-none focus:ring-2 gcs-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
                          <span className="text-xs dark:text-gray-300">%</span>
                     </div>
                 </div>
@@ -161,7 +170,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isDarkMode, onToggleDarkM
                  <button className="text-gray-600 font-bold text-sm py-2 px-6 rounded-lg transition-all duration-200 bg-gray-200 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white">
                     Reset to Defaults
                 </button>
-                 <button className="text-white font-bold text-sm py-2 px-6 rounded-lg transition-all duration-200 bg-gcs-orange hover:opacity-90 shadow-lg shadow-gcs-orange/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gcs-orange"
+                 <button className="text-white font-bold text-sm py-2 px-6 rounded-lg transition-all duration-200 bg-gcs-orange hover:opacity-90 shadow-lg shadow-gcs-orange/30 focus:outline-none focus:ring-2 focus:ring-offset-2 gcs-primary"
                     onClick={handleSaveSettings}
                 >
                     Save Settings

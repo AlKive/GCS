@@ -4,7 +4,7 @@ const AboutPanel: React.FC = () => {
     return (
         <div className="space-y-4 animate-fade-in h-full overflow-y-auto">
             {/* Hero Section */}
-            <div className="bg-gradient-to-br from-gcs-orange to-orange-600 p-4 rounded-xl shadow-lg text-white">
+            <div className="bg-gradient-to-br from-gcs-primary from-gcs-primary-dark p-4 rounded-xl shadow-lg text-white">
                 <div className="flex items-center gap-3 mb-3">
                     <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -37,42 +37,42 @@ const AboutPanel: React.FC = () => {
                 </h2>
                 <div className="grid md:grid-cols-2 gap-2">
                     <div className="flex items-start gap-2 p-2.5 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                        <span className="text-gcs-orange text-base mt-0.5">🤖</span>
+                        <span className="text-gcs-primary text-base mt-0.5">🤖</span>
                         <div>
                             <h3 className="font-semibold text-xs text-gcs-text-dark dark:text-white">YOLOv8 AI Detection</h3>
                             <p className="text-xs text-gray-600 dark:text-gray-400">Advanced mosquito larvae identification system</p>
                         </div>
                     </div>
                     <div className="flex items-start gap-2 p-2.5 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                        <span className="text-gcs-orange text-base mt-0.5">📡</span>
+                        <span className="text-gcs-primary text-base mt-0.5">📡</span>
                         <div>
                             <h3 className="font-semibold text-xs text-gcs-text-dark dark:text-white">Real-time Telemetry</h3>
                             <p className="text-xs text-gray-600 dark:text-gray-400">Live GPS mapping and drone status monitoring</p>
                         </div>
                     </div>
                     <div className="flex items-start gap-2 p-2.5 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                        <span className="text-gcs-orange text-base mt-0.5">💊</span>
+                        <span className="text-gcs-primary text-base mt-0.5">💊</span>
                         <div>
                             <h3 className="font-semibold text-xs text-gcs-text-dark dark:text-white">Automated Dispenser</h3>
                             <p className="text-xs text-gray-600 dark:text-gray-400">Precision larvicide deployment control</p>
                         </div>
                     </div>
                     <div className="flex items-start gap-2 p-2.5 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                        <span className="text-gcs-orange text-base mt-0.5">🗺️</span>
+                        <span className="text-gcs-primary text-base mt-0.5">🗺️</span>
                         <div>
                             <h3 className="font-semibold text-xs text-gcs-text-dark dark:text-white">Mission Planning</h3>
                             <p className="text-xs text-gray-600 dark:text-gray-400">Complete setup and summary interface</p>
                         </div>
                     </div>
                     <div className="flex items-start gap-2 p-2.5 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                        <span className="text-gcs-orange text-base mt-0.5">📊</span>
+                        <span className="text-gcs-primary text-base mt-0.5">📊</span>
                         <div>
                             <h3 className="font-semibold text-xs text-gcs-text-dark dark:text-white">Data Analytics</h3>
                             <p className="text-xs text-gray-600 dark:text-gray-400">Comprehensive logging and visualization</p>
                         </div>
                     </div>
                     <div className="flex items-start gap-2 p-2.5 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                        <span className="text-gcs-orange text-base mt-0.5">🎮</span>
+                        <span className="text-gcs-primary text-base mt-0.5">🎮</span>
                         <div>
                             <h3 className="font-semibold text-xs text-gcs-text-dark dark:text-white">Live Mission Control</h3>
                             <p className="text-xs text-gray-600 dark:text-gray-400">Real-time mission monitoring and control</p>
@@ -89,19 +89,19 @@ const AboutPanel: React.FC = () => {
                 </h2>
                 <div className="space-y-1.5 text-xs text-gray-700 dark:text-gray-300">
                     <div className="flex items-start gap-2">
-                        <span className="text-gcs-orange mt-0.5">•</span>
+                        <span className="text-gcs-primary mt-0.5">•</span>
                         <p>To provide an efficient and automated solution for mosquito vector control</p>
                     </div>
                     <div className="flex items-start gap-2">
-                        <span className="text-gcs-orange mt-0.5">•</span>
+                        <span className="text-gcs-primary mt-0.5">•</span>
                         <p>Supporting public health efforts in reducing dengue and malaria outbreaks</p>
                     </div>
                     <div className="flex items-start gap-2">
-                        <span className="text-gcs-orange mt-0.5">•</span>
+                        <span className="text-gcs-primary mt-0.5">•</span>
                         <p>Enabling proactive mosquito breeding site detection and treatment</p>
                     </div>
                     <div className="flex items-start gap-2">
-                        <span className="text-gcs-orange mt-0.5">•</span>
+                        <span className="text-gcs-primary mt-0.5">•</span>
                         <p>Improving safety and efficiency compared to manual inspection methods</p>
                     </div>
                 </div>
@@ -116,19 +116,19 @@ const AboutPanel: React.FC = () => {
                     </h2>
                     <div className="space-y-1.5 text-xs">
                         <div>
-                            <p className="font-semibold text-gcs-orange">Developed by:</p>
+                            <p className="font-semibold text-gcs-primary">Developed by:</p>
                             <p className="text-gray-700 dark:text-gray-300">Gerikah Alday & Team</p>
                         </div>
                         <div>
-                            <p className="font-semibold text-gcs-orange">Institution:</p>
+                            <p className="font-semibold text-gcs-primary">Institution:</p>
                             <p className="text-gray-700 dark:text-gray-300">Polytechnic University of the Philippines – Sta. Mesa</p>
                         </div>
                         <div>
-                            <p className="font-semibold text-gcs-orange">Program:</p>
+                            <p className="font-semibold text-gcs-primary">Program:</p>
                             <p className="text-gray-700 dark:text-gray-300">Bachelor of Science in Computer Engineering</p>
                         </div>
                         <div>
-                            <p className="font-semibold text-gcs-orange">Adviser:</p>
+                            <p className="font-semibold text-gcs-primary">Adviser:</p>
                             <p className="text-gray-700 dark:text-gray-300">Engr. [Adviser Name]</p>
                         </div>
                     </div>
@@ -142,19 +142,19 @@ const AboutPanel: React.FC = () => {
                     </h2>
                     <div className="space-y-1.5 text-xs">
                         <div>
-                            <p className="font-semibold text-gcs-orange">Frontend:</p>
+                            <p className="font-semibold text-gcs-primary">Frontend:</p>
                             <p className="text-gray-700 dark:text-gray-300">React, TypeScript, Tailwind CSS</p>
                         </div>
                         <div>
-                            <p className="font-semibold text-gcs-orange">AI Model:</p>
+                            <p className="font-semibold text-gcs-primary">AI Model:</p>
                             <p className="text-gray-700 dark:text-gray-300">YOLOv8 for Object Detection</p>
                         </div>
                         <div>
-                            <p className="font-semibold text-gcs-orange">Backend:</p>
+                            <p className="font-semibold text-gcs-primary">Backend:</p>
                             <p className="text-gray-700 dark:text-gray-300">Python, OpenCV</p>
                         </div>
                         <div>
-                            <p className="font-semibold text-gcs-orange">Build Tool:</p>
+                            <p className="font-semibold text-gcs-primary">Build Tool:</p>
                             <p className="text-gray-700 dark:text-gray-300">Vite</p>
                         </div>
                     </div>

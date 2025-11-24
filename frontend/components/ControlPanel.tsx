@@ -49,7 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onNavigate }) => {
         <NavItem icon={<GuideIcon />} label="Guide" view="guide" active={currentView === 'guide'} onClick={() => onNavigate('guide')} />
       </nav>
       <div className="mt-auto">
-        <button onClick={() => onNavigate('about')} className={`flex w-full items-center justify-center px-4 py-2 rounded-lg transition-colors duration-200 ${currentView === 'about' ? 'text-gcs-orange font-semibold' : 'text-gray-400 hover:text-gcs-orange'}`}>
+        <button onClick={() => onNavigate('about')} className={`flex w-full items-center justify-center px-4 py-2 rounded-lg transition-colors duration-200 ${currentView === 'about' ? 'text-gcs-primary font-semibold' : 'text-gray-400 hover:text-gcs-primary'}`}>
           <AboutIcon />
           <span>About Project</span>
         </button>

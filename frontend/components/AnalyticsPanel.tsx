@@ -50,7 +50,7 @@ const BarChart: React.FC<{ missions: Mission[] }> = ({ missions }) => {
             {weeklyData.map(item => (
                 <div key={item.label} className="flex-1 flex flex-col items-center">
                     <div className="relative w-full h-full flex items-end">
-                       <div className="w-full bg-gcs-orange/20 rounded-t-md hover:bg-gcs-orange/40 transition-colors" style={{ height: `${(item.value / maxValue) * 100}%` }}>
+                       <div className="w-full bg-gcs-primary/20 rounded-t-md hover:bg-gcs-primary/40 transition-colors" style={{ height: `${(item.value / maxValue) * 100}%` }}>
                             <span className="absolute -top-5 left-1/2 -translate-x-1/2 text-xs font-bold text-gcs-text-dark dark:text-white">{item.value}</span>
                         </div>
                     </div>
@@ -127,7 +127,7 @@ const DonutChart: React.FC<{ percentage: number }> = ({ percentage }) => {
         <div className="relative flex items-center justify-center" style={{width: size, height: size}}>
             <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
                 <circle className="text-gray-200 dark:text-gray-600" strokeWidth={strokeWidth} stroke="currentColor" fill="transparent" r={radius} cx={size/2} cy={size/2} />
-                <circle className="text-gcs-orange"
+                <circle className="text-gcs-primary"
                     strokeWidth={strokeWidth}
                     strokeDasharray={circumference}
                     strokeDashoffset={offset}
@@ -204,7 +204,7 @@ const AnalyticsPanel: React.FC<AnalyticsPanelProps> = ({ missions }) => {
                  <div className="flex-grow flex items-center justify-center">
                      <DonutChart percentage={successRate} />
                  </div>
-                 <button className="w-full mt-3 bg-gcs-orange text-white font-bold text-sm py-2 px-4 rounded-lg hover:opacity-90 transition-opacity">
+                 <button className="w-full mt-3 bg-gcs-primary text-white font-bold text-sm py-2 px-4 rounded-lg hover:opacity-90 transition-opacity">
                    Export Report
                  </button>
             </div>

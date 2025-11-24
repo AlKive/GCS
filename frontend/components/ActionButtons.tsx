@@ -9,7 +9,7 @@ const SignalIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 
 
 const TelemetryItem: React.FC<{ icon: React.ReactNode; label: string; value: string; statusColor?: string }> = ({ icon, label, value, statusColor }) => (
     <div className="flex items-center gap-1.5 p-1.5 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-        <div className={`w-6 h-6 flex items-center justify-center rounded-full bg-gcs-orange/10 ${statusColor || 'text-gcs-orange'}`}>
+        <div className={`w-6 h-6 flex items-center justify-center rounded-full bg-gcs-primary/10 ${statusColor || 'text-gcs-primary'}`}>
             {icon}
         </div>
         <div className="flex-1 min-w-0">
@@ -74,7 +74,7 @@ const PreFlightPanel: React.FC<PreFlightPanelProps> = ({ onMissionSetup, telemet
             </div>
             <button
                 onClick={onMissionSetup}
-                className="w-full mt-3 text-white font-bold py-2 px-4 text-sm rounded-lg transition-all duration-200 bg-gcs-orange hover:opacity-90 shadow-lg shadow-gcs-orange/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gcs-orange"
+                className="w-full mt-3 text-white font-bold py-2 px-4 text-sm rounded-lg transition-all duration-200 bg-gcs-primary hover:opacity-90 shadow-lg shadow-gcs-primary/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gcs-primary"
             >
                 Plan New Mission
             </button>

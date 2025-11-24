@@ -5,7 +5,7 @@ const OverviewCard: React.FC<OverviewStat> = ({ icon, label, value, subtext }) =
   return (
     <div className="bg-gcs-card dark:bg-gray-800 p-3 rounded-xl shadow-sm flex flex-col">
       <div className="flex items-center mb-2">
-        <div className="w-7 h-7 rounded-full bg-gcs-orange/10 flex items-center justify-center">
+        <div className="w-7 h-7 rounded-full bg-gcs-primary/10 flex items-center justify-center">
             {icon}
         </div>
       </div>

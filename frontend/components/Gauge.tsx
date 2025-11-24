@@ -4,7 +4,7 @@ const ProgressBar: React.FC<{ label: string; percentage: number }> = ({ label, p
     <div>
         <p className="text-sm text-gray-600 mb-2">{label}</p>
         <div className="w-full bg-gray-200 rounded-full h-2">
-            <div className="bg-gcs-orange h-2 rounded-full" style={{ width: `${percentage}%` }}></div>
+            <div className="bg-gcs-primary h-2 rounded-full" style={{ width: `${percentage}%` }}></div>
         </div>
     </div>
 );

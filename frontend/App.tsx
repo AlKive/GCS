@@ -27,10 +27,22 @@ const App: React.FC = () => {
   const [mapStyle, setMapStyle] = useState(() => {
     return localStorage.getItem('mapStyle') || 'Satellite';
   });
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('theme') || 'orange';
+  });
 
   useEffect(() => {
     localStorage.setItem('mapStyle', mapStyle);
   }, [mapStyle]);
+
+  useEffect(() => {
+    const oldTheme = localStorage.getItem('theme');
+    if (oldTheme) {
+      document.documentElement.classList.remove(`theme-${oldTheme}`);
+    }
+    document.documentElement.classList.add(`theme-${theme}`);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   // 1. Start with an empty array
   const [missions, setMissions] = useState<Mission[]>([]); 
@@ -127,6 +139,8 @@ const App: React.FC = () => {
           onToggleDarkMode={() => setDarkMode(!isDarkMode)} 
           mapStyle={mapStyle}
           setMapStyle={setMapStyle}
+          theme={theme}
+          setTheme={setTheme}
         />;
       case 'guide':
         return <GuidePanel />;
