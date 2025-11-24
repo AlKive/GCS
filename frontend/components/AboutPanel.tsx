@@ -117,7 +117,7 @@ const AboutPanel: React.FC = () => {
                     <div className="space-y-1.5 text-xs">
                         <div>
                             <p className="font-semibold text-gcs-primary">Developed by:</p>
-                            <p className="text-gray-700 dark:text-gray-300">Gerikah Alday & Team</p>
+                            <p className="text-gray-700 dark:text-gray-300">Catelyn Joy Morco, Gerikah Alday, Alexa Babiera, and Charles David Bernido</p>
                         </div>
                         <div>
                             <p className="font-semibold text-gcs-primary">Institution:</p>
