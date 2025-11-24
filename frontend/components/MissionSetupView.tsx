@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
 import L, { LatLng, Icon } from 'leaflet';
 import type { MissionPlan } from 'types';
 import iconUrl from 'leaflet/dist/images/marker-icon.png?url';
