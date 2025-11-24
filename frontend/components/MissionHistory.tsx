@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import type { Mission } from '../types';
+import type { Mission } from 'types';
 
 interface MissionHistoryProps {
     missions: Mission[];
