@@ -24,6 +24,7 @@ const App: React.FC = () => {
   const [missionPlan, setMissionPlan] = useState<MissionPlan | null>(null);
   const [isSetupViewVisible, setSetupViewVisible] = useState(false);
   const [isDarkMode, setDarkMode] = useState(false);
+  const [mapStyle, setMapStyle] = useState('Satellite'); // New state for map style
 
   // 1. Start with an empty array
   const [missions, setMissions] = useState<Mission[]>([]); 
@@ -115,7 +116,12 @@ const App: React.FC = () => {
       case 'flightLogs':
         return <FlightLogsPanel missions={missions} />;
       case 'settings':
-        return <SettingsPanel isDarkMode={isDarkMode} onToggleDarkMode={() => setDarkMode(!isDarkMode)} />;
+        return <SettingsPanel 
+          isDarkMode={isDarkMode} 
+          onToggleDarkMode={() => setDarkMode(!isDarkMode)} 
+          mapStyle={mapStyle}
+          setMapStyle={setMapStyle}
+        />;
       case 'guide':
         return <GuidePanel />;
       case 'about':
@@ -146,7 +152,7 @@ const App: React.FC = () => {
       </main>
       
       {isSetupViewVisible && <MissionSetupView onLaunch={handleLaunchMission} onClose={() => setSetupViewVisible(false)} />}
-      {isMissionActive && <LiveMissionView telemetry={liveTelemetry} onEndMission={endMission} />}
+      {isMissionActive && <LiveMissionView telemetry={liveTelemetry} onEndMission={endMission} mapStyle={mapStyle} />}
     </div>
   );
 };

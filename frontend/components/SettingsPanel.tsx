@@ -65,12 +65,13 @@ const SelectSetting: React.FC<SelectSettingProps> = ({ label, description, optio
 interface SettingsPanelProps {
     isDarkMode: boolean;
     onToggleDarkMode: () => void;
+    mapStyle: string;
+    setMapStyle: (style: string) => void;
 }
 
-const SettingsPanel: React.FC<SettingsPanelProps> = ({ isDarkMode, onToggleDarkMode }) => {
+const SettingsPanel: React.FC<SettingsPanelProps> = ({ isDarkMode, onToggleDarkMode, mapStyle, setMapStyle }) => {
     // Dummy state for other settings
     const [units, setUnits] = useState('Metric');
-    const [mapStyle, setMapStyle] = useState('Satellite');
     const [hudColor, setHudColor] = useState('Orange');
     const [autoSync, setAutoSync] = useState(true);
 
@@ -96,7 +97,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isDarkMode, onToggleDarkM
                  <SelectSetting
                     label="Default Map Style"
                     description="Select the default map style for viewing GPS tracks."
-                    options={['Satellite', 'Streets', 'Topographic']}
+                    options={['Default', 'Satellite', 'Streets', 'Topographic']}
                     value={mapStyle}
                     onChange={setMapStyle}
                 />

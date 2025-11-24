@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { LiveTelemetry, BreedingSiteInfo } from 'types';
 // We will use a placeholder for the map
-// import MissionTrackMap from './MissionTrackMap'; 
+import MissionTrackMap from './MissionTrackMap'; 
 
 // ---
 // FIX #1: Gauges are compact (w-28 h-28, which is 7rem)
@@ -224,9 +224,10 @@ const TelemetryPanel: React.FC<{ telemetry: LiveTelemetry }> = ({ telemetry }) =
 interface LiveMissionViewProps {
   telemetry: LiveTelemetry;
   onEndMission: (durationSeconds: number, gpsTrack: { lat: number; lon: number }[], detectedSites: BreedingSiteInfo[]) => void;
+  mapStyle: string;
 }
 
-const LiveMissionView: React.FC<LiveMissionViewProps> = ({ telemetry, onEndMission }) => {
+const LiveMissionView: React.FC<LiveMissionViewProps> = ({ telemetry, onEndMission, mapStyle }) => {
   const [isConfirmingEndMission, setConfirmingEndMission] = useState(false);
   const missionName = "Sector 7G"; 
 
@@ -278,8 +279,7 @@ const LiveMissionView: React.FC<LiveMissionViewProps> = ({ telemetry, onEndMissi
 
         {/* Left Column: Map/Camera (2/3 width) */}
         <div className="col-span-2 bg-black rounded-lg shadow-inner overflow-hidden relative flex items-center justify-center">
-          
-          <p className="text-gray-500 text-lg">(Map / Camera Feed Placeholder)</p>
+          <MissionTrackMap track={telemetry.gpsTrack} mapStyle={mapStyle} />
           
           {/* OSD (On-Screen Display) Elements */}
           <div className="absolute top-4 left-4 p-2 bg-black/30 rounded">
