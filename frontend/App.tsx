@@ -44,36 +44,29 @@ const App: React.FC = () => {
     localStorage.setItem('theme', theme);
   }, [theme]);
 
-  // 1. Start with an empty array
   const [missions, setMissions] = useState<Mission[]>([]); 
   const { overviewStats, time, date, liveTelemetry, setArmedState } = useDashboardData(isMissionActive);
   const [currentView, setCurrentView] = useState<View>('dashboard');
 
-  // 2. Fetch missions from the backend when the app loads
   useEffect(() => {
     const fetchMissions = async () => {
       try {
-        const response = await fetch('/api/missions'); // Uses the vite proxy
+        // NOTE FOR STANDALONE APP: Change this to your backend IP when building the APK!
+        const response = await fetch('/api/missions'); 
         
-        // ---
-        // 3. CRASH FIX
-        // This checks for 500 errors and prevents the "missions.slice" crash
-        // ---
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        // ---
 
         const data: Mission[] = await response.json();
         setMissions(data);
       } catch (error) {
         console.error("Failed to fetch missions:", error);
-        // On error, set missions to an empty array so the app doesn't crash
         setMissions([]); 
       }
     };
     fetchMissions();
-  }, []); // The empty array means this runs only once
+  }, []);
 
   useEffect(() => {
     if (isDarkMode) {
@@ -83,9 +76,8 @@ const App: React.FC = () => {
     }
   }, [isDarkMode]);
   
-  // 4. This function now SAVES the mission to the backend
   const endMission = async (duration: string, gpsTrack: { lat: number; lon: number }[], detectedSites: BreedingSiteInfo[]) => {
-    const newMission: Omit<Mission, 'id'> = { // The database will create the 'id'
+    const newMission: Omit<Mission, 'id'> = { 
         name: missionPlan?.name || `Mission ${missions.length + 1}`,
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         duration,
@@ -96,7 +88,7 @@ const App: React.FC = () => {
     };
 
     try {
-      // Send the new mission data to the backend
+      // NOTE FOR STANDALONE APP: Change this to your backend IP as well when building the APK!
       const response = await fetch('/api/missions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -107,8 +99,8 @@ const App: React.FC = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const savedMission: Mission = await response.json(); // Get the final mission back
-      setMissions(prevMissions => [savedMission, ...prevMissions]); // Add it to the list
+      const savedMission: Mission = await response.json(); 
+      setMissions(prevMissions => [savedMission, ...prevMissions]); 
     } catch (error) {
       console.error("Failed to save mission:", error);
     }
@@ -162,9 +154,13 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gcs-background text-gcs-text-dark font-sans dark:bg-gcs-dark dark:text-gcs-text-light overflow-hidden">
+    <div className="flex flex-col md:flex-row h-[100dvh] bg-gcs-background text-gcs-text-dark font-sans dark:bg-gcs-dark dark:text-gcs-text-light overflow-hidden">
+      
+      {/* MODIFIED: flex-col md:flex-row and h-[100dvh] for perfect mobile viewport sizing */}
       <Sidebar currentView={currentView} onNavigate={setCurrentView} />
-      <main className="flex-1 flex flex-col p-4 overflow-hidden">
+      
+      {/* MODIFIED: min-h-0 prevents the flexbox blowout off the bottom of the screen */}
+      <main className="flex-1 flex flex-col p-4 overflow-hidden min-h-0">
         <DashboardHeader time={time} date={date} title={viewTitles[currentView]} batteryPercentage={liveTelemetry.battery.percentage} />
         <div className="flex-1 overflow-y-auto min-h-0">
           {renderView()}
