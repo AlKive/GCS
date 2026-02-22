@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import type { MissionPlan } from 'types';
 
+// Import the Supabase client (going up one directory level)
+import { supabase } from '../supabaseClient';
+
 // This is just the data we need for the list
 type MissionPlanHeader = Pick<MissionPlan, 'id' | 'name'>;
 
@@ -14,15 +17,23 @@ const LoadPlanModal: React.FC<LoadPlanModalProps> = ({ onSelect, onClose }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // MODIFIED: Fetch just the IDs and Names from the 'mission_plans' table
   useEffect(() => {
     const fetchPlans = async () => {
       try {
         setLoading(true);
         setError('');
-        const response = await fetch('/api/plans'); 
-        if (!response.ok) throw new Error('Failed to fetch plans');
-        const data: MissionPlanHeader[] = await response.json();
-        setPlans(data);
+        
+        const { data, error: supabaseError } = await supabase
+          .from('mission_plans') // Updated table name
+          .select('id, name')
+          .order('id', { ascending: false }); // Newest plans at the top
+
+        if (supabaseError) {
+          throw supabaseError;
+        }
+        
+        setPlans(data as MissionPlanHeader[]);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An unknown error occurred');
       } finally {
@@ -32,14 +43,21 @@ const LoadPlanModal: React.FC<LoadPlanModalProps> = ({ onSelect, onClose }) => {
     fetchPlans();
   }, []);
 
+  // MODIFIED: Fetch the full details from the 'mission_plans' table
   const handleSelectPlan = async (planId: string | number) => {
     try {
-      const response = await fetch(`/api/plans/${planId}`);
-      if (!response.ok) throw new Error('Failed to load plan details');
+      const { data, error } = await supabase
+        .from('mission_plans') // Updated table name
+        .select('*')
+        .eq('id', planId)
+        .single();
+
+      if (error) {
+        throw error;
+      }
       
-      const fullPlanData: MissionPlan = await response.json();
-      
-      onSelect(fullPlanData);
+      // Send the complete plan object back to MissionSetupView
+      onSelect(data as MissionPlan);
       onClose(); 
 
     } catch (err) {
@@ -48,8 +66,6 @@ const LoadPlanModal: React.FC<LoadPlanModalProps> = ({ onSelect, onClose }) => {
   };
 
   return (
-    // MODIFIED: Increased z-index to 200 so it sits ABOVE the MissionSetupView (which is z-[100])
-    // Added p-4 so it doesn't stretch to the exact edges of the phone screen
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[200] p-4">
       <div className="bg-white dark:bg-gray-800 text-black dark:text-white rounded-xl shadow-2xl p-6 w-full max-w-md">
         <h2 className="text-xl font-bold mb-4">Load Mission Plan</h2>

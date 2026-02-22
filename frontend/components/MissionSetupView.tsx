@@ -7,6 +7,7 @@ import shadowUrl from 'leaflet/dist/images/marker-shadow.png?url';
 
 import LoadPlanModal from './LoadPlanModal';
 import { mapStyleProviders } from '../utils/mapStyles'; 
+import { supabase } from '../supabaseClient';
 
 const DefaultIcon = new Icon({
     iconUrl: iconUrl,
@@ -35,7 +36,6 @@ const WaypointMap = React.memo(({ waypoints, onAddWaypoint }: {
     </>
   );
 });
-
 
 // --- Main View Component ---
 interface MissionSetupViewProps {
@@ -122,26 +122,21 @@ const MissionSetupView: React.FC<MissionSetupViewProps> = ({ onLaunch, onClose, 
   const allPreArmingComplete = Object.values(preArmingChecks).every(check => check.status === 'success');
   const allChecksComplete = isChecklistComplete && allPreArmingComplete;
 
-  const savePlan = async (plan: MissionPlan): Promise<MissionPlan | null> => {
+  const savePlanToDatabase = async (plan: MissionPlan): Promise<MissionPlan | null> => {
     try {
-      const response = await fetch('/api/plans', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(plan),
-      });
-      if (!response.ok) {
-        let errorMsg = 'Failed to save plan';
-        try {
-          const err = await response.json();
-          errorMsg = err.error || errorMsg;
-        } catch (e) {
-          errorMsg = `${response.status}: ${response.statusText}`;
-        }
-        throw new Error(errorMsg);
+      const { data, error } = await supabase
+        .from('mission_plans')
+        .insert([plan])
+        .select()
+        .single();
+
+      if (error) {
+        throw error;
       }
-      return await response.json();
+      
+      return data as MissionPlan;
     } catch (error) {
-      console.error(error);
+      console.error("Failed to save plan to Supabase:", error);
       alert(`Error: ${error instanceof Error ? error.message : 'Could not save mission plan.'}`);
       return null;
     }
@@ -155,7 +150,7 @@ const MissionSetupView: React.FC<MissionSetupViewProps> = ({ onLaunch, onClose, 
       waypoints: waypoints.map(wp => ({ lat: wp.lat, lon: wp.lng })),
     };
     
-    const savedPlan = await savePlan(plan);
+    const savedPlan = await savePlanToDatabase(plan);
     if (savedPlan) {
       alert('Plan saved successfully!'); 
     }
@@ -169,7 +164,7 @@ const MissionSetupView: React.FC<MissionSetupViewProps> = ({ onLaunch, onClose, 
       waypoints: waypoints.map(wp => ({ lat: wp.lat, lon: wp.lng })),
     };
     
-    const savedPlan = await savePlan(plan);
+    const savedPlan = await savePlanToDatabase(plan);
     if (savedPlan) {
       onLaunch(savedPlan); 
     }
@@ -190,13 +185,8 @@ const MissionSetupView: React.FC<MissionSetupViewProps> = ({ onLaunch, onClose, 
 
   return (
     <>
-      {/* MODIFIED: Changed inset-0 to support mobile safe areas (dvh) */}
       <div className="fixed inset-0 h-[100dvh] bg-black bg-opacity-75 flex items-center justify-center z-[100] md:p-6">
-        
-        {/* MODIFIED: Fills screen on mobile, rounded modal on desktop */}
         <div className="bg-gray-900 text-white md:rounded-xl shadow-2xl w-full h-full flex flex-col overflow-hidden">
-          
-          {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-700 bg-gray-900 z-10">
             <h1 className="text-lg md:text-xl font-bold">Mission Setup & Pre-flight Checklist</h1>
             <button 
@@ -207,14 +197,9 @@ const MissionSetupView: React.FC<MissionSetupViewProps> = ({ onLaunch, onClose, 
             </button>
           </div>
 
-          {/* Main Content Area: Stack vertically on mobile, side-by-side on desktop */}
           <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
-            
-            {/* Map Area */}
             <div className="w-full md:w-2/3 h-[45vh] md:h-full p-0 md:p-4 flex flex-col border-b md:border-b-0 md:border-r border-gray-700 shrink-0">
               <h2 className="text-orange-500 text-sm font-semibold mb-2 hidden md:block">Flight Path Planning</h2>
-              
-              {/* Map Container */}
               <div className="flex-1 bg-gray-800 md:rounded-xl overflow-hidden relative z-0">
                 <MapContainer
                   center={[14.5995, 120.9842]} 
@@ -225,7 +210,6 @@ const MissionSetupView: React.FC<MissionSetupViewProps> = ({ onLaunch, onClose, 
                   <WaypointMap waypoints={waypoints} onAddWaypoint={handleAddWaypoint} />
                 </MapContainer>
                 
-                {/* Floating Map Controls for Mobile */}
                 <div className="absolute bottom-4 left-4 right-4 z-[400] flex justify-between gap-2">
                   <div className="flex gap-2">
                     <button onClick={handleUndo} disabled={undoStack.length === 0} className="px-4 py-2 bg-gray-900/90 backdrop-blur rounded-lg text-sm font-bold shadow disabled:opacity-50">Undo</button>
@@ -236,9 +220,7 @@ const MissionSetupView: React.FC<MissionSetupViewProps> = ({ onLaunch, onClose, 
               </div>
             </div>
             
-            {/* Checklist & Form Area - Scrollable */}
             <div className="w-full md:w-1/3 p-4 flex flex-col overflow-y-auto pb-24 md:pb-4">
-              
               <div className="mb-6">
                 <label className="block text-sm font-semibold mb-2 text-gray-300">Mission Name</label>
                 <input
@@ -249,7 +231,6 @@ const MissionSetupView: React.FC<MissionSetupViewProps> = ({ onLaunch, onClose, 
                 />
               </div>
 
-              {/* Pre-flight Checklist */}
               <div className="mb-6 bg-gray-800/50 p-4 rounded-xl border border-gray-700/50">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-base font-bold text-orange-400">Pre-flight Checklist</h3>
@@ -280,7 +261,6 @@ const MissionSetupView: React.FC<MissionSetupViewProps> = ({ onLaunch, onClose, 
                 </div>
               </div>
 
-              {/* Pre-arming Checks */}
               <div className="mb-6">
                 <h3 className="text-base font-bold mb-3 text-gray-300">System Diagnostics</h3>
                 <div className="grid grid-cols-1 md:grid-cols-1 gap-2 bg-gray-900 rounded-xl p-3 border border-gray-800">
@@ -297,7 +277,6 @@ const MissionSetupView: React.FC<MissionSetupViewProps> = ({ onLaunch, onClose, 
                 {allChecksComplete && <div className="mt-3 text-sm font-bold text-green-400 text-center bg-green-900/20 p-2 rounded-lg border border-green-900/50">All checks passed. Ready for launch.</div>}
               </div>
 
-              {/* Mobile Sticky Footer Actions */}
               <div className="fixed md:static bottom-0 left-0 right-0 p-4 md:p-0 bg-gray-900 md:bg-transparent border-t md:border-t-0 border-gray-700 z-50 md:mt-auto">
                 <div className="grid grid-cols-2 gap-3 mb-3">
                   <button onClick={() => setLoadModalOpen(true)} className="py-3 px-4 rounded-xl bg-gray-800 hover:bg-gray-700 text-white text-sm font-bold transition-colors border border-gray-700">Load Plan</button>

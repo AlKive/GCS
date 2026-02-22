@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
 // ---
-
 import Sidebar from './components/ControlPanel'; 
 import DashboardHeader from './components/Header'; 
 import LiveMissionView from './components/LiveMissionView';
@@ -13,6 +12,8 @@ import MissionSetupView from './components/MissionSetupView';
 import GuidePanel from './components/GuidePanel';
 import AboutPanel from './components/AboutPanel';
 
+// NEW: Import your Supabase client
+import { supabase } from './supabaseClient';
 import { useDashboardData } from './hooks/useDashboardData';
 import type { Mission, BreedingSiteInfo, MissionPlan, LiveTelemetry } from 'types';
 // ---
@@ -48,20 +49,30 @@ const App: React.FC = () => {
   const { overviewStats, time, date, liveTelemetry, setArmedState } = useDashboardData(isMissionActive);
   const [currentView, setCurrentView] = useState<View>('dashboard');
 
+  // MODIFIED: Fetch missions from 'mission_logs' and translate snake_case columns
   useEffect(() => {
     const fetchMissions = async () => {
       try {
-        // NOTE FOR STANDALONE APP: Change this to your backend IP when building the APK!
-        const response = await fetch('/api/missions'); 
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        const { data, error } = await supabase
+          .from('mission_logs')
+          .select('*')
+          .order('id', { ascending: false }); 
+
+        if (error) {
+          throw error;
         }
 
-        const data: Mission[] = await response.json();
-        setMissions(data);
+        if (data) {
+          // Translate DB snake_case columns to Frontend camelCase properties
+          const formattedMissions = data.map((item: any) => ({
+            ...item,
+            gpsTrack: item.gps_track,
+            detectedSites: item.detected_sites
+          }));
+          setMissions(formattedMissions as Mission[]);
+        }
       } catch (error) {
-        console.error("Failed to fetch missions:", error);
+        console.error("Failed to fetch missions from Supabase:", error);
         setMissions([]); 
       }
     };
@@ -76,33 +87,42 @@ const App: React.FC = () => {
     }
   }, [isDarkMode]);
   
+  // MODIFIED: Save mission to 'mission_logs' using snake_case columns
   const endMission = async (duration: string, gpsTrack: { lat: number; lon: number }[], detectedSites: BreedingSiteInfo[]) => {
-    const newMission: Omit<Mission, 'id'> = { 
+    
+    // Format the payload to perfectly match your Supabase columns
+    const dbMission = { 
         name: missionPlan?.name || `Mission ${missions.length + 1}`,
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         duration,
         status: 'Completed',
         location: 'Live Location',
-        gpsTrack,
-        detectedSites,
+        gps_track: gpsTrack,           // Maps to DB column
+        detected_sites: detectedSites, // Maps to DB column
     };
 
     try {
-      // NOTE FOR STANDALONE APP: Change this to your backend IP as well when building the APK!
-      const response = await fetch('/api/missions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newMission)
-      });
+      const { data, error } = await supabase
+        .from('mission_logs')
+        .insert([dbMission])
+        .select() 
+        .single(); 
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (error) {
+        throw error;
       }
 
-      const savedMission: Mission = await response.json(); 
-      setMissions(prevMissions => [savedMission, ...prevMissions]); 
+      if (data) {
+        // Map the saved data back to camelCase for the React state so the UI doesn't crash
+        const newSavedMission: Mission = {
+          ...(data as any),
+          gpsTrack: data.gps_track,
+          detectedSites: data.detected_sites
+        };
+        setMissions(prevMissions => [newSavedMission, ...prevMissions]); 
+      }
     } catch (error) {
-      console.error("Failed to save mission:", error);
+      console.error("Failed to save mission to Supabase:", error);
     }
 
     setMissionActive(false);
@@ -155,11 +175,8 @@ const App: React.FC = () => {
 
   return (
     <div className="flex flex-col md:flex-row h-[100dvh] bg-gcs-background text-gcs-text-dark font-sans dark:bg-gcs-dark dark:text-gcs-text-light overflow-hidden">
-      
-      {/* MODIFIED: flex-col md:flex-row and h-[100dvh] for perfect mobile viewport sizing */}
       <Sidebar currentView={currentView} onNavigate={setCurrentView} />
       
-      {/* MODIFIED: min-h-0 prevents the flexbox blowout off the bottom of the screen */}
       <main className="flex-1 flex flex-col p-4 overflow-hidden min-h-0">
         <DashboardHeader time={time} date={date} title={viewTitles[currentView]} batteryPercentage={liveTelemetry.battery.percentage} />
         <div className="flex-1 overflow-y-auto min-h-0">
