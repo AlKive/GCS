@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">LIPAD</string>
+    <string name="title_activity_main">LIPAD</string>
+    <string name="package_name">com.lipad.app</string>
+    <string name="custom_url_scheme">com.lipad.app</string>
+</resources>
