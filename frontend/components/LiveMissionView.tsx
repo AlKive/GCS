@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import type { LiveTelemetry, BreedingSiteInfo } from 'types';
-// We will use a placeholder for the map
 import MissionTrackMap from './MissionTrackMap'; 
 
-// ---
-// FIX #1: Gauges are compact (w-28 h-28, which is 7rem)
-// ---
+// --- Instrument Components ---
+
 const GaugeWrapper: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
-    <div className={`relative w-28 h-28 bg-[#0A1019] rounded-full border-2 border-gray-700 flex items-center justify-center ${className}`}>
+    // Slightly more flexible sizing for mobile (w-24/h-24 on small phones, w-28 on larger)
+    <div className={`relative w-24 h-24 md:w-28 md:h-28 bg-[#0A1019] rounded-full border-2 border-gray-700 flex items-center justify-center shrink-0 ${className}`}>
         {children}
     </div>
 );
-
-// --- Instrument Components (Adjusted for new 10rem size) ---
 
 const Speedometer: React.FC<{ speed: number }> = ({ speed }) => {
     const SPEED_MAX = 22;
@@ -26,22 +23,20 @@ const Speedometer: React.FC<{ speed: number }> = ({ speed }) => {
                     </div>
                 ))}
             </div>
-            {/* Adjusted text size and position */}
-            <div className="absolute w-full h-full text-white text-xs text-center" style={{transform: `rotate(135deg)`}}>
-                <span className="absolute" style={{transform: 'rotate(-135deg) translateY(-3.2rem)'}}>0</span>
-                <span className="absolute" style={{transform: 'rotate(-90deg) translateY(-3.2rem)'}}>6</span>
-                <span className="absolute" style={{transform: 'rotate(0deg) translateY(-3.2rem)'}}>12</span>
-                <span className="absolute" style={{transform: 'rotate(90deg) translateY(-3.2rem)'}}>20</span>
-                <span className="absolute" style={{transform: 'rotate(135deg) translateY(-3.2rem)'}}>22</span>
+            <div className="absolute w-full h-full text-white text-[10px] md:text-xs text-center" style={{transform: `rotate(135deg)`}}>
+                <span className="absolute" style={{transform: 'rotate(-135deg) translateY(-2.8rem)'}}>0</span>
+                <span className="absolute" style={{transform: 'rotate(-90deg) translateY(-2.8rem)'}}>6</span>
+                <span className="absolute" style={{transform: 'rotate(0deg) translateY(-2.8rem)'}}>12</span>
+                <span className="absolute" style={{transform: 'rotate(90deg) translateY(-2.8rem)'}}>20</span>
+                <span className="absolute" style={{transform: 'rotate(135deg) translateY(-2.8rem)'}}>22</span>
             </div>
-            {/* Adjusted pointer size */}
             <div className="absolute w-1 h-1/2 bg-transparent top-0 left-1/2 -ml-0.5 origin-bottom transition-transform duration-200" style={{ transform: `rotate(${angle}deg)` }}>
-                <div className="w-1 h-12 bg-green-400 rounded-t-full" />
+                <div className="w-1 h-10 md:h-12 bg-green-400 rounded-t-full" />
             </div>
             <div className="relative z-10 text-center bg-[#0A1019] p-1 rounded-lg">
-                <p className="text-xs text-gray-400">SPEED</p>
-                <p className="text-lg font-mono font-bold text-white">{speed.toFixed(1)}</p>
-                <p className="text-xs text-gray-400">m/s</p>
+                <p className="text-[10px] md:text-xs text-gray-400">SPEED</p>
+                <p className="text-base md:text-lg font-mono font-bold text-white">{speed.toFixed(1)}</p>
+                <p className="text-[10px] text-gray-400">m/s</p>
             </div>
         </GaugeWrapper>
     );
@@ -55,9 +50,8 @@ const AttitudeIndicatorGauge: React.FC<{ roll: number; pitch: number }> = ({ rol
                     <div className="h-1/2 bg-yellow-800 absolute bottom-0 w-full" />
                 </div>
             </div>
-            {/* Adjusted icon size */}
             <div className="absolute inset-0 flex items-center justify-center">
-                <svg viewBox="0 0 100 50" fill="none" className="w-16 h-8">
+                <svg viewBox="0 0 100 50" fill="none" className="w-12 h-6 md:w-16 md:h-8">
                     <path d="M50 25 L30 35 M50 25 L70 35 M50 25 L50 10 M10 25 H 90" stroke="#F59E0B" strokeWidth="4" strokeLinecap="round" />
                 </svg>
             </div>
@@ -73,16 +67,14 @@ const HeadingIndicator: React.FC<{ heading: number }> = ({ heading }) => {
                 {[...Array(12)].map((_, i) => (
                     <div key={i} className="absolute w-full h-full" style={{ transform: `rotate(${i * 30}deg)` }}>
                         <div className={`absolute top-2.5 left-1/2 -ml-0.5 ${i % 3 === 0 ? 'w-0.5 h-4 bg-white' : 'w-px h-2.5 bg-gray-400'}`} />
-                        {/* Adjusted text size and position */}
-                        {i % 3 === 0 && <span className="absolute top-5 left-1/2 -translate-x-1/2 text-sm font-bold text-white">{cardinals[i/3]}</span>}
+                        {i % 3 === 0 && <span className="absolute top-5 left-1/2 -translate-x-1/2 text-[10px] md:text-sm font-bold text-white">{cardinals[i/3]}</span>}
                     </div>
                 ))}
             </div>
-             {/* Adjusted pointer size */}
              <div className="absolute inset-0 flex items-center justify-center">
-                 <svg viewBox="0 0 50 50" fill="#2DD4BF" className="w-7 h-7 drop-shadow-lg"><path d="M25 5 L40 45 L25 35 L10 45 Z" /></svg>
+                 <svg viewBox="0 0 50 50" fill="#2DD4BF" className="w-6 h-6 md:w-7 md:h-7 drop-shadow-lg"><path d="M25 5 L40 45 L25 35 L10 45 Z" /></svg>
              </div>
-             <div className="absolute top-1 text-green-400 font-mono text-sm">{Math.round(heading)}°</div>
+             <div className="absolute top-1 text-green-400 font-mono text-[10px] md:text-sm">{Math.round(heading)}°</div>
         </GaugeWrapper>
     );
 };
@@ -92,58 +84,32 @@ const VerticalSpeedIndicator: React.FC<{ vspeed: number }> = ({ vspeed }) => {
     const angle = Math.max(-VSPEED_MAX, Math.min(vspeed, VSPEED_MAX)) / VSPEED_MAX * 90;
     return (
         <GaugeWrapper>
-             {/* Adjusted text size and position */}
-            <div className="absolute w-full h-full text-white text-xs">
+            <div className="absolute w-full h-full text-white text-[10px] md:text-xs">
                 <span className="absolute top-1/2 -translate-y-1/2 left-3">0</span>
                 <span className="absolute top-1/4 -translate-y-1/2 left-4">6</span>
                 <span className="absolute bottom-1/4 translate-y-1/2 left-4">6</span>
-                <span className="absolute top-2 left-1/2 -translate-x-1/2 text-xs">UP</span>
-                <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs">DN</span>
+                <span className="absolute top-2 left-1/2 -translate-x-1/2 text-[10px]">UP</span>
+                <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px]">DN</span>
             </div>
              <div className="absolute w-1/2 h-0.5 bg-transparent top-1/2 -mt-px right-0 origin-left transition-transform duration-200" style={{ transform: `rotate(${angle}deg)` }}>
                 <div className="w-full h-0.5 bg-green-400 rounded-r-full" />
              </div>
             <div className="relative z-10 text-center bg-[#0A1019] p-1 rounded-lg">
-                <p className="text-xs text-gray-400">V.SPEED</p>
-                <p className="text-lg font-mono font-bold text-white">{vspeed.toFixed(1)}</p>
-                <p className="text-xs text-gray-400">m/s</p>
+                <p className="text-[10px] md:text-xs text-gray-400">V.SPEED</p>
+                <p className="text-base md:text-lg font-mono font-bold text-white">{vspeed.toFixed(1)}</p>
+                <p className="text-[10px] text-gray-400">m/s</p>
             </div>
         </GaugeWrapper>
     );
 };
 
-// ---
-// FIX #2: AltitudeTape is now part of the 4-gauge grid
-// ---
-const AltitudeTape: React.FC<{ altitude: number }> = ({ altitude }) => {
-    const ALT_MAX = 120;
-    const percent = Math.min(altitude, ALT_MAX) / ALT_MAX * 100;
-    return (
-        // Changed to be a square wrapper to fit the grid
-        <div className="relative w-28 h-28">
-          <div className="w-12 h-full mx-auto bg-[#0A1019] rounded-lg border-2 border-gray-700 flex flex-col justify-end relative overflow-hidden">
-              <div className="absolute inset-0 text-white text-xs text-right pr-0.5">
-                  {[...Array(7)].map((_,i) => <div key={i} style={{bottom: `${i * (100/6)}%`}} className="absolute w-full pr-1">{i * 20}</div>)}
-              </div>
-              <div className="bg-cyan-400/80 w-full transition-all duration-200" style={{ height: `${percent}%` }} />
-              <div className="absolute top-1/2 -translate-y-1/2 w-full h-8 bg-black/30 border-y-2 border-cyan-400 flex items-center justify-center">
-                  <span className="font-mono text-cyan-300 font-bold text-sm">{altitude.toFixed(1)}</span>
-              </div>
-          </div>
-        </div>
-    );
-};
-
-// --- Flight Instruments Panel (Now much larger) ---
+// --- Panels ---
 
 const FlightInstruments: React.FC<{ telemetry: LiveTelemetry }> = ({ telemetry }) => {
   return (
-    <div className="bg-gray-800 rounded-lg shadow-inner p-1.5">
-      <h2 className="text-xs font-semibold uppercase text-gray-400 mb-1 text-center">Instruments</h2>
-      {/* This is the new 2x2 grid for the 4 main gauges, making them
-        take up a "quarter of the full display size" (half of the right panel)
-      */}
-      <div className="grid grid-cols-2 gap-1 justify-items-center">
+    <div className="bg-gray-800 rounded-xl shadow-inner p-2 md:p-1.5 border border-gray-700">
+      <h2 className="text-xs font-semibold uppercase text-gray-400 mb-2 md:mb-1 text-center tracking-wider">Instruments</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-2 gap-2 justify-items-center">
           <Speedometer speed={telemetry.speed} />
           <AttitudeIndicatorGauge roll={telemetry.roll} pitch={telemetry.pitch} />
           <HeadingIndicator heading={telemetry.heading} />
@@ -153,71 +119,68 @@ const FlightInstruments: React.FC<{ telemetry: LiveTelemetry }> = ({ telemetry }
   );
 };
 
-// --- Modes Panel (Unchanged from before) ---
 const ModeButton: React.FC<{ label: string, active: boolean }> = ({ label, active }) => (
   <div
-    className={`flex-1 text-center py-0.5 px-1 rounded-md transition-colors ${
+    className={`flex flex-1 items-center justify-center text-center py-2 md:py-1 px-1 rounded-lg md:rounded-md transition-colors ${
       active
         ? 'bg-orange-600 text-white shadow-lg'
-        : 'bg-gray-600/50 text-gray-300'
+        : 'bg-gray-700 md:bg-gray-600/50 text-gray-300 border border-gray-600 md:border-transparent'
     }`}
   >
-    <span className="text-[10px] font-semibold uppercase tracking-tight">{label}</span>
+    <span className="text-[10px] md:text-[10px] font-bold md:font-semibold uppercase tracking-tight">{label}</span>
   </div>
 );
 
 const ModesPanel: React.FC<{ telemetry: LiveTelemetry }> = ({ telemetry }) => {
   return (
-    <div className="bg-gray-800 rounded-lg shadow-inner p-1.5">
-      <h2 className="text-xs font-semibold uppercase text-gray-400 mb-0.5">Modes</h2>
-      <div className="grid grid-cols-2 gap-1">
+    <div className="bg-gray-800 rounded-xl shadow-inner p-2 md:p-1.5 border border-gray-700">
+      <h2 className="text-xs font-semibold uppercase text-gray-400 mb-2 md:mb-0.5 tracking-wider">Modes</h2>
+      {/* 3 columns on mobile looks cleaner for small buttons, 2 on desktop */}
+      <div className="grid grid-cols-3 md:grid-cols-2 gap-2 md:gap-1">
         <ModeButton label="ARM" active={telemetry.armed} />
         <ModeButton label="ANGLE" active={telemetry.modes.angle} />
-        <ModeButton label="POSITION HOLD" active={telemetry.modes.positionHold} />
-        <ModeButton label="RETURN TO HOME" active={telemetry.modes.returnToHome} />
-        <ModeButton label="ALTITUDE HOLD" active={telemetry.modes.altitudeHold} />
-        <ModeButton label="HEADING HOLD" active={telemetry.modes.headingHold} />
+        <ModeButton label="POS HOLD" active={telemetry.modes.positionHold} />
+        <ModeButton label="RTL" active={telemetry.modes.returnToHome} />
+        <ModeButton label="ALT HOLD" active={telemetry.modes.altitudeHold} />
+        <ModeButton label="HDG HOLD" active={telemetry.modes.headingHold} />
         <ModeButton label="AIRMODE" active={telemetry.modes.airmode} />
         <ModeButton label="SURFACE" active={telemetry.modes.surface} />
-        <ModeButton label="MC BRAKING" active={telemetry.modes.mcBraking} />
+        <ModeButton label="BRAKING" active={telemetry.modes.mcBraking} />
         <ModeButton label="BEEPER" active={telemetry.modes.beeper} />
       </div>
     </div>
   );
 };
 
-// --- Telemetry Panel (2x2 Grid Layout) ---
 const TelemetryPanel: React.FC<{ telemetry: LiveTelemetry }> = ({ telemetry }) => {
   return (
-    <div className="bg-gray-800 rounded-lg shadow-inner p-1.5">
-      <h2 className="text-xs font-semibold uppercase text-gray-400 mb-0.5">Telemetry</h2>
-      {/* 2x2 Grid Layout */}
-      <div className="grid grid-cols-2 gap-1">
-        <div className="flex flex-col items-center justify-center bg-gray-700/50 py-1.5 px-1 rounded-md">
-          <span className="text-[9px] text-gray-400 uppercase">Signal</span>
-          <span className="font-mono text-xs font-semibold text-white">{telemetry.signalStrength}</span>
-          <span className="text-[8px] text-gray-400">dBm</span>
+    <div className="bg-gray-800 rounded-xl shadow-inner p-2 md:p-1.5 border border-gray-700">
+      <h2 className="text-xs font-semibold uppercase text-gray-400 mb-2 md:mb-0.5 tracking-wider">Telemetry</h2>
+      <div className="grid grid-cols-2 gap-2 md:gap-1">
+        <div className="flex flex-col items-center justify-center bg-gray-900 md:bg-gray-700/50 py-2 md:py-1.5 px-1 rounded-lg md:rounded-md border border-gray-700 md:border-transparent">
+          <span className="text-[10px] md:text-[9px] text-gray-400 uppercase font-bold">Signal</span>
+          <span className="font-mono text-sm md:text-xs font-semibold text-white">{telemetry.signalStrength}</span>
+          <span className="text-[9px] md:text-[8px] text-gray-400">dBm</span>
         </div>
-        <div className="flex flex-col items-center justify-center bg-gray-700/50 py-1.5 px-1 rounded-md">
-          <span className="text-[9px] text-gray-400 uppercase">Battery</span>
-          <span className="font-mono text-xs font-semibold text-white">{telemetry.battery.percentage.toFixed(1)}%</span>
-          <span className="text-[8px] text-gray-400">{telemetry.battery.voltage.toFixed(1)}V</span>
+        <div className="flex flex-col items-center justify-center bg-gray-900 md:bg-gray-700/50 py-2 md:py-1.5 px-1 rounded-lg md:rounded-md border border-gray-700 md:border-transparent">
+          <span className="text-[10px] md:text-[9px] text-gray-400 uppercase font-bold">Battery</span>
+          <span className="font-mono text-sm md:text-xs font-semibold text-white">{telemetry.battery.percentage.toFixed(1)}%</span>
+          <span className="text-[9px] md:text-[8px] text-gray-400">{telemetry.battery.voltage.toFixed(1)}V</span>
         </div>
-        <div className="flex flex-col items-center justify-center bg-gray-700/50 py-1.5 px-1 rounded-md">
-          <span className="text-[9px] text-gray-400 uppercase">Satellites</span>
-          <span className="font-mono text-xs font-semibold text-white">{telemetry.satellites}</span>
-          <span className="text-[8px] text-gray-400">GPS</span>
+        <div className="flex flex-col items-center justify-center bg-gray-900 md:bg-gray-700/50 py-2 md:py-1.5 px-1 rounded-lg md:rounded-md border border-gray-700 md:border-transparent">
+          <span className="text-[10px] md:text-[9px] text-gray-400 uppercase font-bold">Satellites</span>
+          <span className="font-mono text-sm md:text-xs font-semibold text-white">{telemetry.satellites}</span>
+          <span className="text-[9px] md:text-[8px] text-gray-400">GPS</span>
         </div>
-        <div className="flex flex-col items-center justify-center bg-gray-700/50 py-1.5 px-1 rounded-md">
-          <span className="text-[9px] text-gray-400 uppercase">Distance</span>
-          <span className="font-mono text-xs font-semibold text-white">{telemetry.distanceFromHome.toFixed(0)}</span>
-          <span className="text-[8px] text-gray-400">m</span>
+        <div className="flex flex-col items-center justify-center bg-gray-900 md:bg-gray-700/50 py-2 md:py-1.5 px-1 rounded-lg md:rounded-md border border-gray-700 md:border-transparent">
+          <span className="text-[10px] md:text-[9px] text-gray-400 uppercase font-bold">Distance</span>
+          <span className="font-mono text-sm md:text-xs font-semibold text-white">{telemetry.distanceFromHome.toFixed(0)}</span>
+          <span className="text-[9px] md:text-[8px] text-gray-400">m</span>
         </div>
       </div>
     </div>
   );
 };
-
 
 // --- Main Live View Component ---
 
@@ -231,9 +194,6 @@ const LiveMissionView: React.FC<LiveMissionViewProps> = ({ telemetry, onEndMissi
   const [isConfirmingEndMission, setConfirmingEndMission] = useState(false);
   const missionName = "Sector 7G"; 
 
-  // ---
-  // FIX #3: Frontend-based Mission Timer
-  // ---
   const [missionSeconds, setMissionSeconds] = useState(0);
 
   useEffect(() => {
@@ -241,102 +201,98 @@ const LiveMissionView: React.FC<LiveMissionViewProps> = ({ telemetry, onEndMissi
     const timer = setInterval(() => {
       setMissionSeconds(seconds => seconds + 1);
     }, 1000); 
-    return () => {
-      clearInterval(timer); 
-    };
+    return () => clearInterval(timer); 
   }, []); 
 
   const formattedMissionTime = `${Math.floor(missionSeconds / 60).toString().padStart(2, '0')}:${(missionSeconds % 60).toString().padStart(2, '0')}`;
 
-
   return (
-    <div className="fixed inset-0 bg-gray-900 text-white font-sans z-50 p-4 flex flex-col gap-4 animate-fade-in">
+    // MODIFIED: h-[100dvh] and flex-col for mobile sizing, z-[100] so it covers the bottom navigation bar
+    <div className="fixed inset-0 h-[100dvh] bg-gray-900 text-white font-sans z-[100] flex flex-col animate-fade-in overflow-hidden">
       
-      {/* Top Bar: Mission Name & End Button */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-xl font-bold text-orange-500">
-          Live Mission: <span className="text-white">{missionName}</span>
-        </h1>
-        <div className="flex items-center gap-4">
+      {/* Top Bar */}
+      <div className="flex justify-between items-center p-3 md:p-4 bg-gray-900 border-b border-gray-800 shrink-0 shadow-md z-10">
+        <div>
+            <h1 className="text-sm md:text-xl font-bold text-orange-500">Live Mission:</h1>
+            <h2 className="text-lg md:text-xl font-bold text-white leading-tight">{missionName}</h2>
+        </div>
+        <div className="flex items-center gap-3 md:gap-4">
           <div className="text-right">
-            <span className="text-xs uppercase text-gray-400">Mission Time</span>
-            <p className="font-mono text-lg">{formattedMissionTime}</p>
+            <span className="text-[10px] md:text-xs uppercase text-gray-400 block tracking-wider">Mission Time</span>
+            <p className="font-mono text-lg md:text-xl font-bold">{formattedMissionTime}</p>
           </div>
           <button
             onClick={() => setConfirmingEndMission(true)}
-            className="bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-red-700 transition-colors"
+            className="bg-red-600 text-white font-bold py-2 md:py-2 px-3 md:px-4 rounded-lg shadow-md hover:bg-red-700 transition-colors text-sm md:text-base"
           >
             End Mission
           </button>
         </div>
       </div>
 
-      {/* ---
-        FIX #4: NEW 50/50 LAYOUT
-      ---
-      */}
-      <main className="flex-1 grid grid-cols-3 gap-4 min-h-0">
+      {/* Main Layout: Stack on mobile, side-by-side on desktop */}
+      <main className="flex-1 flex flex-col md:flex-row min-h-0 bg-gray-950">
 
-        {/* Left Column: Map/Camera (2/3 width) */}
-        <div className="col-span-2 bg-black rounded-lg shadow-inner overflow-hidden relative flex items-center justify-center">
+        {/* Top/Left Column: Map/Camera */}
+        {/* On mobile: Takes exactly 45% of the screen height. On desktop: takes 2/3 of width */}
+        <div className="w-full md:w-2/3 h-[45vh] md:h-full bg-black relative flex items-center justify-center shrink-0 border-b md:border-b-0 md:border-r border-gray-800">
           
-          <p className="text-gray-500 text-lg">(Map / Camera Feed Placeholder)</p>
+          <p className="text-gray-500 text-sm md:text-lg px-8 text-center">(Map / Camera Feed Placeholder)</p>
           
-          {/* OSD (On-Screen Display) Elements */}
-          <div className="absolute top-4 left-4 p-2 bg-black/30 rounded">
-            <span className="text-xs uppercase text-gray-400">LAT</span>
-            <p className="font-mono text-lg">{telemetry.gps.lat.toFixed(6)}</p>
+          {/* OSD (On-Screen Display) */}
+          <div className="absolute top-2 md:top-4 left-2 md:left-4 p-1 md:p-2 bg-black/50 backdrop-blur rounded">
+            <span className="text-[10px] md:text-xs uppercase text-gray-300">LAT</span>
+            <p className="font-mono text-sm md:text-lg">{telemetry.gps.lat.toFixed(6)}</p>
           </div>
-          <div className="absolute bottom-4 left-4 p-2 bg-black/30 rounded">
-            <span className="text-xs uppercase text-gray-400">ALT</span>
-            <p className="font-mono text-lg">{telemetry.altitude.toFixed(1)} <span className="text-base">m</span></p>
+          <div className="absolute bottom-2 md:bottom-4 left-2 md:left-4 p-1 md:p-2 bg-black/50 backdrop-blur rounded">
+            <span className="text-[10px] md:text-xs uppercase text-gray-300">ALT</span>
+            <p className="font-mono text-sm md:text-lg">{telemetry.altitude.toFixed(1)} <span className="text-xs md:text-base">m</span></p>
           </div>
-          <div className="absolute bottom-4 right-4 p-2 bg-black/30 rounded">
-            <span className="text-xs uppercase text-gray-400">SPD</span>
-            <p className="font-mono text-lg">{telemetry.speed.toFixed(1)} <span className="text-base">m/s</span></p>
+          <div className="absolute bottom-2 md:bottom-4 right-2 md:right-4 p-1 md:p-2 bg-black/50 backdrop-blur rounded">
+            <span className="text-[10px] md:text-xs uppercase text-gray-300">SPD</span>
+            <p className="font-mono text-sm md:text-lg">{telemetry.speed.toFixed(1)} <span className="text-xs md:text-base">m/s</span></p>
           </div>
 
-          {/* Mini-Map */}
-          <div className="absolute top-4 right-4 w-48 h-40 bg-gray-800/80 rounded-lg border border-gray-600 p-2 flex flex-col">
-            <span className="text-xs text-gray-400">Mini Map View</span>
+          {/* Mini-Map - Scaled down slightly for mobile */}
+          <div className="absolute top-2 md:top-4 right-2 md:right-4 w-32 h-24 md:w-48 md:h-40 bg-gray-900/80 backdrop-blur rounded-lg border border-gray-600 p-2 flex flex-col shadow-lg">
+            <span className="text-[10px] md:text-xs text-gray-300 font-semibold tracking-wide">Mini Map</span>
             <div className="flex-1 flex items-center justify-center">
-              <span className="text-gray-500 text-sm">(Mini-Map)</span>
+              <span className="text-gray-500 text-[10px] md:text-sm">(Map View)</span>
             </div>
-            <p className="font-mono text-xs">{telemetry.gps.lat.toFixed(4)}</p>
-            <p className="font-mono text-xs">{telemetry.gps.lon.toFixed(4)}</p>
+            <div className="flex justify-between md:flex-col">
+              <p className="font-mono text-[9px] md:text-xs text-gray-400">{telemetry.gps.lat.toFixed(4)}</p>
+              <p className="font-mono text-[9px] md:text-xs text-gray-400">{telemetry.gps.lon.toFixed(4)}</p>
+            </div>
           </div>
         </div>
 
-        {/* Right Column: Instruments, Modes, Telemetry (1/3 width) */}
-        <div className="col-span-1 flex flex-col gap-1.5 overflow-hidden">
-          {/* The AltitudeTape is now part of the 2x2 grid */}
+        {/* Bottom/Right Column: Scrollable Instruments Panel */}
+        <div className="w-full md:w-1/3 flex flex-col gap-3 md:gap-1.5 overflow-y-auto p-3 md:p-2 pb-8 md:pb-2">
           <FlightInstruments telemetry={telemetry} />
           <ModesPanel telemetry={telemetry} />
           <TelemetryPanel telemetry={telemetry} />
         </div>
         
       </main>
-      {/* --- END OF NEW LAYOUT --- */}
 
-
-      {/* End Mission Confirmation Modal */}
+      {/* End Mission Modal: Updated z-index to 200 */}
       {isConfirmingEndMission && (
-        <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-60" aria-modal="true" role="dialog">
-            <div className="bg-gray-800 p-6 rounded-xl shadow-2xl border border-white/10 max-w-sm text-center animate-dialog-in">
-                <h2 className="text-lg font-bold text-white mb-2">Confirm End Mission</h2>
-                <p className="text-sm text-gray-300 mb-4">Are you sure you want to end the current mission?</p>
-                <div className="flex justify-center gap-3">
+        <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-[200]" aria-modal="true" role="dialog">
+            <div className="bg-gray-800 p-6 rounded-2xl shadow-2xl border border-gray-600 max-w-sm w-[90%] text-center animate-dialog-in">
+                <h2 className="text-xl font-bold text-white mb-2">End Mission?</h2>
+                <p className="text-sm text-gray-400 mb-6">Are you sure you want to completely terminate the current live flight operation?</p>
+                <div className="flex flex-col sm:flex-row justify-center gap-3">
                     <button 
                         onClick={() => setConfirmingEndMission(false)} 
-                        className="px-6 py-2 text-sm bg-white/20 hover:bg-white/30 text-white font-semibold rounded-lg transition-colors"
+                        className="w-full sm:w-auto px-6 py-3 text-sm bg-gray-700 hover:bg-gray-600 text-white font-bold rounded-xl transition-colors"
                     >
                         Cancel
                     </button>
                     <button 
                         onClick={() => onEndMission(missionSeconds, telemetry.gpsTrack, telemetry.detectedSites)} 
-                        className="px-6 py-2 text-sm bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-colors"
+                        className="w-full sm:w-auto px-6 py-3 text-sm bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl shadow-lg shadow-red-900/50 transition-colors"
                     >
-                        Confirm
+                        Confirm Termination
                     </button>
                 </div>
             </div>
@@ -346,7 +302,7 @@ const LiveMissionView: React.FC<LiveMissionViewProps> = ({ telemetry, onEndMissi
   );
 };
 
-// Animations for the view and dialog
+// Animations
 const style = document.createElement('style');
 style.innerHTML = `
 @keyframes fade-in {

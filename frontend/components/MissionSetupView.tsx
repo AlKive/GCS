@@ -70,7 +70,6 @@ const MissionSetupView: React.FC<MissionSetupViewProps> = ({ onLaunch, onClose, 
   });
   const [isLoadModalOpen, setLoadModalOpen] = useState(false);
 
-  // Simulate pre-arming checks loading
   useEffect(() => {
     const checks = Object.keys(preArmingChecks) as Array<keyof typeof preArmingChecks>;
     checks.forEach((key, index) => {
@@ -79,7 +78,7 @@ const MissionSetupView: React.FC<MissionSetupViewProps> = ({ onLaunch, onClose, 
           ...prev,
           [key]: { ...prev[key], status: 'success' as const }
         }));
-      }, (index + 1) * 500); // Stagger the checks
+      }, (index + 1) * 500); 
     });
   }, []);
 
@@ -148,10 +147,6 @@ const MissionSetupView: React.FC<MissionSetupViewProps> = ({ onLaunch, onClose, 
     }
   };
 
-  // ---
-  // THIS IS THE FIX FOR THE "SAVE PLAN" BUTTON
-  // It no longer calls onClose()
-  // ---
   const handleSaveAndClose = async () => {
     const plan: MissionPlan = {
       name: missionName,
@@ -162,11 +157,9 @@ const MissionSetupView: React.FC<MissionSetupViewProps> = ({ onLaunch, onClose, 
     
     const savedPlan = await savePlan(plan);
     if (savedPlan) {
-      alert('Plan saved successfully!'); // Give user feedback
-      // We removed onClose() from here so the modal stays open
+      alert('Plan saved successfully!'); 
     }
   };
-  // --- END OF FIX ---
 
   const handleLaunch = async () => {
     const plan: MissionPlan = {
@@ -176,7 +169,6 @@ const MissionSetupView: React.FC<MissionSetupViewProps> = ({ onLaunch, onClose, 
       waypoints: waypoints.map(wp => ({ lat: wp.lat, lon: wp.lng })),
     };
     
-    // We save the plan, then launch
     const savedPlan = await savePlan(plan);
     if (savedPlan) {
       onLaunch(savedPlan); 
@@ -193,215 +185,137 @@ const MissionSetupView: React.FC<MissionSetupViewProps> = ({ onLaunch, onClose, 
       : [];
     setWaypoints(loadedWaypoints);
     
-    setLoadModalOpen(false); // Close the modal
+    setLoadModalOpen(false); 
   };
 
   return (
     <>
-      <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-        <div className="bg-gray-900 text-white rounded-lg shadow-2xl w-full h-full flex flex-col">
+      {/* MODIFIED: Changed inset-0 to support mobile safe areas (dvh) */}
+      <div className="fixed inset-0 h-[100dvh] bg-black bg-opacity-75 flex items-center justify-center z-[100] md:p-6">
+        
+        {/* MODIFIED: Fills screen on mobile, rounded modal on desktop */}
+        <div className="bg-gray-900 text-white md:rounded-xl shadow-2xl w-full h-full flex flex-col overflow-hidden">
           
           {/* Header */}
-          <div className="flex items-center justify-between p-2 border-b border-gray-700">
-            <h1 className="text-base font-bold">Mission Setup & Pre-flight Checklist</h1>
+          <div className="flex items-center justify-between p-4 border-b border-gray-700 bg-gray-900 z-10">
+            <h1 className="text-lg md:text-xl font-bold">Mission Setup & Pre-flight Checklist</h1>
             <button 
               onClick={onClose}
-              className="text-gray-400 hover:text-white text-xl font-bold leading-none"
+              className="text-gray-400 hover:text-white p-2 text-2xl font-bold leading-none active:bg-gray-800 rounded-lg"
             >
               ×
             </button>
           </div>
 
-          {/* Main Content */}
-          <div className="flex flex-1 overflow-hidden">
+          {/* Main Content Area: Stack vertically on mobile, side-by-side on desktop */}
+          <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
             
-            {/* Left Side: Map */}
-            <div className="w-2/3 p-3 flex flex-col border-r border-gray-700">
-              <h2 className="text-orange-500 text-sm font-semibold mb-2">Flight Path Planning</h2>
+            {/* Map Area */}
+            <div className="w-full md:w-2/3 h-[45vh] md:h-full p-0 md:p-4 flex flex-col border-b md:border-b-0 md:border-r border-gray-700 shrink-0">
+              <h2 className="text-orange-500 text-sm font-semibold mb-2 hidden md:block">Flight Path Planning</h2>
               
-              <div className="flex-1 bg-gray-800 rounded overflow-hidden mb-2">
+              {/* Map Container */}
+              <div className="flex-1 bg-gray-800 md:rounded-xl overflow-hidden relative z-0">
                 <MapContainer
                   center={[14.5995, 120.9842]} 
                   zoom={13}
                   className="w-full h-full"
                 >
-                  <TileLayer
-                    url={url}
-                    attribution={attribution}
-                  />
+                  <TileLayer url={url} attribution={attribution} />
                   <WaypointMap waypoints={waypoints} onAddWaypoint={handleAddWaypoint} />
                 </MapContainer>
-              </div>
-
-              <div className="flex space-x-2">
-                <button 
-                  onClick={handleUndo}
-                  disabled={undoStack.length === 0}
-                  className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-xs disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Undo
-                </button>
-                <button 
-                  onClick={handleRedo}
-                  disabled={redoStack.length === 0}
-                  className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-xs disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Redo
-                </button>
-                <button 
-                  onClick={handleClear}
-                  className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-xs"
-                >
-                  Clear
-                </button>
+                
+                {/* Floating Map Controls for Mobile */}
+                <div className="absolute bottom-4 left-4 right-4 z-[400] flex justify-between gap-2">
+                  <div className="flex gap-2">
+                    <button onClick={handleUndo} disabled={undoStack.length === 0} className="px-4 py-2 bg-gray-900/90 backdrop-blur rounded-lg text-sm font-bold shadow disabled:opacity-50">Undo</button>
+                    <button onClick={handleRedo} disabled={redoStack.length === 0} className="px-4 py-2 bg-gray-900/90 backdrop-blur rounded-lg text-sm font-bold shadow disabled:opacity-50">Redo</button>
+                  </div>
+                  <button onClick={handleClear} className="px-4 py-2 bg-red-900/90 backdrop-blur rounded-lg text-sm font-bold shadow text-red-100">Clear</button>
+                </div>
               </div>
             </div>
             
-            {/* Right Side: Form & Checklists */}
-            <div className="w-1/3 p-3 flex flex-col overflow-y-auto">
+            {/* Checklist & Form Area - Scrollable */}
+            <div className="w-full md:w-1/3 p-4 flex flex-col overflow-y-auto pb-24 md:pb-4">
               
-              {/* Mission Name */}
-              <div className="mb-3">
-                <label className="block text-xs font-medium mb-1 text-gray-300">Mission Name</label>
+              <div className="mb-6">
+                <label className="block text-sm font-semibold mb-2 text-gray-300">Mission Name</label>
                 <input
                   type="text"
                   value={missionName}
                   onChange={e => setMissionName(e.target.value)}
-                  className="w-full p-2 rounded bg-gray-800 border border-gray-700 text-sm text-white focus:border-orange-500 focus:outline-none"
+                  className="w-full p-3 rounded-xl bg-gray-800 border border-gray-700 text-base text-white focus:border-orange-500 focus:outline-none"
                 />
               </div>
 
               {/* Pre-flight Checklist */}
-              <div className="mb-3">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-semibold">Pre-flight Checklist</h3>
+              <div className="mb-6 bg-gray-800/50 p-4 rounded-xl border border-gray-700/50">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-base font-bold text-orange-400">Pre-flight Checklist</h3>
                   <button 
                     onClick={() => setChecklist({ battery: true, propellers: true, gps: true, weather: true })}
-                    className="text-xs text-orange-500 hover:text-orange-400"
+                    className="text-sm font-bold text-gray-400 hover:text-white bg-gray-700 px-3 py-1 rounded-lg"
                   >
                     Check All
                   </button>
                 </div>
-                <div className="space-y-1">
-                  <label className="flex items-center space-x-2 cursor-pointer hover:bg-gray-800 p-1 rounded">
-                    <input
-                      type="checkbox"
-                      checked={checklist.battery}
-                      onChange={() => handleChecklistChange('battery')}
-                      className="w-3 h-3 rounded"
-                    />
-                    <span className={`text-xs ${checklist.battery ? 'line-through text-gray-500' : ''}`}>
-                      Battery Charged & Secure
-                    </span>
+                <div className="space-y-3">
+                  <label className="flex items-center space-x-3 cursor-pointer p-2 rounded-lg hover:bg-gray-700 transition-colors">
+                    <input type="checkbox" checked={checklist.battery} onChange={() => handleChecklistChange('battery')} className="w-5 h-5 rounded accent-orange-500" />
+                    <span className={`text-sm md:text-base font-medium ${checklist.battery ? 'line-through text-gray-500' : 'text-gray-200'}`}>Battery Charged & Secure</span>
                   </label>
-                  <label className="flex items-center space-x-2 cursor-pointer hover:bg-gray-800 p-1 rounded">
-                    <input
-                      type="checkbox"
-                      checked={checklist.propellers}
-                      onChange={() => handleChecklistChange('propellers')}
-                      className="w-3 h-3 rounded"
-                    />
-                    <span className={`text-xs ${checklist.propellers ? 'line-through text-gray-500' : ''}`}>
-                      Propellers Secure
-                    </span>
+                  <label className="flex items-center space-x-3 cursor-pointer p-2 rounded-lg hover:bg-gray-700 transition-colors">
+                    <input type="checkbox" checked={checklist.propellers} onChange={() => handleChecklistChange('propellers')} className="w-5 h-5 rounded accent-orange-500" />
+                    <span className={`text-sm md:text-base font-medium ${checklist.propellers ? 'line-through text-gray-500' : 'text-gray-200'}`}>Propellers Secure</span>
                   </label>
-                  <label className="flex items-center space-x-2 cursor-pointer hover:bg-gray-800 p-1 rounded">
-                    <input
-                      type="checkbox"
-                      checked={checklist.gps}
-                      onChange={() => handleChecklistChange('gps')}
-                      className="w-3 h-3 rounded"
-                    />
-                    <span className={`text-xs ${checklist.gps ? 'line-through text-gray-500' : ''}`}>
-                      GPS Lock Acquired
-                    </span>
+                  <label className="flex items-center space-x-3 cursor-pointer p-2 rounded-lg hover:bg-gray-700 transition-colors">
+                    <input type="checkbox" checked={checklist.gps} onChange={() => handleChecklistChange('gps')} className="w-5 h-5 rounded accent-orange-500" />
+                    <span className={`text-sm md:text-base font-medium ${checklist.gps ? 'line-through text-gray-500' : 'text-gray-200'}`}>GPS Lock Acquired</span>
                   </label>
-                  <label className="flex items-center space-x-2 cursor-pointer hover:bg-gray-800 p-1 rounded">
-                    <input
-                      type="checkbox"
-                      checked={checklist.weather}
-                      onChange={() => handleChecklistChange('weather')}
-                      className="w-3 h-3 rounded"
-                    />
-                    <span className={`text-xs ${checklist.weather ? 'line-through text-gray-500' : ''}`}>
-                      Weather Conditions Checked
-                    </span>
+                  <label className="flex items-center space-x-3 cursor-pointer p-2 rounded-lg hover:bg-gray-700 transition-colors">
+                    <input type="checkbox" checked={checklist.weather} onChange={() => handleChecklistChange('weather')} className="w-5 h-5 rounded accent-orange-500" />
+                    <span className={`text-sm md:text-base font-medium ${checklist.weather ? 'line-through text-gray-500' : 'text-gray-200'}`}>Weather Conditions Checked</span>
                   </label>
                 </div>
               </div>
 
               {/* Pre-arming Checks */}
-              <div className="mb-3">
-                <h3 className="text-sm font-semibold mb-2">Pre-arming Checks</h3>
-                <div className="space-y-1">
+              <div className="mb-6">
+                <h3 className="text-base font-bold mb-3 text-gray-300">System Diagnostics</h3>
+                <div className="grid grid-cols-1 md:grid-cols-1 gap-2 bg-gray-900 rounded-xl p-3 border border-gray-800">
                   {Object.entries(preArmingChecks).map(([key, check]) => (
-                    <div key={key} className="flex items-center space-x-2 p-1">
-                      {check.status === 'loading' && (
-                        <span className="text-yellow-500 text-sm animate-pulse">⟳</span>
-                      )}
-                      {check.status === 'success' && (
-                        <span className="text-green-500 text-sm">✓</span>
-                      )}
-                      {check.status === 'error' && (
-                        <span className="text-red-500 text-sm">✗</span>
-                      )}
-                      <span className={`text-xs ${
-                        check.status === 'loading' ? 'text-gray-400' :
-                        check.status === 'success' ? 'text-green-400' :
-                        'text-red-400'
-                      }`}>
-                        {check.label}
-                      </span>
+                    <div key={key} className="flex items-center justify-between p-2 rounded-lg bg-gray-800/50">
+                      <span className="text-sm font-medium text-gray-300">{check.label}</span>
+                      {check.status === 'loading' && <span className="text-yellow-500 animate-pulse font-bold">⟳ Checking</span>}
+                      {check.status === 'success' && <span className="text-green-500 font-bold">✓ Passed</span>}
+                      {check.status === 'error' && <span className="text-red-500 font-bold">✗ Failed</span>}
                     </div>
                   ))}
                 </div>
-                {!allPreArmingComplete && (
-                  <div className="mt-2 text-xs text-yellow-400 text-center">
-                    Running pre-arming checks...
-                  </div>
-                )}
-                {allChecksComplete && (
-                  <div className="mt-2 text-xs text-green-400 text-center">
-                    All checks passed. Ready to launch.
-                  </div>
-                )}
+                {!allPreArmingComplete && <div className="mt-3 text-sm font-semibold text-yellow-400 text-center animate-pulse">Running hardware diagnostics...</div>}
+                {allChecksComplete && <div className="mt-3 text-sm font-bold text-green-400 text-center bg-green-900/20 p-2 rounded-lg border border-green-900/50">All checks passed. Ready for launch.</div>}
               </div>
 
-              {/* Action Buttons */}
-              <div className="grid grid-cols-2 gap-2 mt-auto pt-2">
-                <button 
-                  onClick={() => setLoadModalOpen(true)}
-                  className="py-2 px-3 rounded bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold transition-colors"
-                >
-                  Load Plan
-                </button>
-                
-                <button 
-                  onClick={handleSaveAndClose} 
-                  className="py-2 px-3 rounded bg-green-600 hover:bg-green-700 text-white text-xs font-semibold transition-colors"
-                >
-                  Save Plan
-                </button>
-
-                <button 
-                  onClick={onClose} 
-                  className="py-2 px-3 rounded bg-gray-600 hover:bg-gray-700 text-white text-xs font-semibold transition-colors"
-                >
-                  Cancel
-                </button>
-                
+              {/* Mobile Sticky Footer Actions */}
+              <div className="fixed md:static bottom-0 left-0 right-0 p-4 md:p-0 bg-gray-900 md:bg-transparent border-t md:border-t-0 border-gray-700 z-50 md:mt-auto">
+                <div className="grid grid-cols-2 gap-3 mb-3">
+                  <button onClick={() => setLoadModalOpen(true)} className="py-3 px-4 rounded-xl bg-gray-800 hover:bg-gray-700 text-white text-sm font-bold transition-colors border border-gray-700">Load Plan</button>
+                  <button onClick={handleSaveAndClose} className="py-3 px-4 rounded-xl bg-gray-800 hover:bg-gray-700 text-white text-sm font-bold transition-colors border border-gray-700">Save Plan</button>
+                </div>
                 <button
                   onClick={handleLaunch}
                   disabled={!allChecksComplete} 
-                  className={`py-2 px-3 rounded text-xs font-semibold transition-colors ${
+                  className={`w-full py-4 rounded-xl text-base font-bold shadow-lg transition-all ${
                     !allChecksComplete
-                      ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                      : 'bg-orange-600 hover:bg-orange-700 text-white' 
+                      ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
+                      : 'bg-orange-600 hover:bg-orange-500 text-white shadow-orange-900/50' 
                   }`}
                 >
-                  Launch Mission
+                  {allChecksComplete ? 'LAUNCH DRONE' : 'Awaiting Checks...'}
                 </button>
               </div>
+
             </div>
           </div>
         </div>
